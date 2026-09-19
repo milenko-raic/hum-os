@@ -1,0 +1,2740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="theme-color" content="#061018">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="HUM-OS">
+<meta name="apple-mobile-web-app-title" content="HUM-OS">
+<meta name="msapplication-TileColor" content="#071722">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>HUM-OS — Personal Behavior Navigation</title>
+<link rel="icon" type="image/svg+xml" href="./icons/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="description" content="HUM-OS is a premium personal behavior navigation system for quitting, reducing, bounding and replacing unwanted habits.">
+
+<style>
+:root{
+  --bg:#051019;
+  --vvh:100dvh;
+  --safe-bottom:var(--safe-bottom);
+  --bg2:#071722;
+  --panel:#0a1924;
+  --panel2:#0d2030;
+  --panel3:#102838;
+  --ink:#eef4f6;
+  --muted:#91a5b2;
+  --muted2:#667c8a;
+  --line:#223b4c;
+  --line2:#34566b;
+  --gold:#bd945d;
+  --gold2:#e0bd87;
+  --gold3:#f1d6aa;
+  --good:#8eb69a;
+  --warn:#d1ae69;
+  --bad:#c87972;
+  --blue:#7fa7c2;
+  --shadow:0 18px 54px rgba(0,0,0,.30);
+  --radius:5px;
+  --header:64px;
+}
+*{box-sizing:border-box}
+button,a,[role="button"]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+input,textarea,select{-webkit-tap-highlight-color:transparent}
+html{
+  scroll-behavior:auto;
+  scroll-padding-top:82px;
+  background:#051019;
+  color-scheme:dark;
+  -webkit-text-size-adjust:100%;
+  overscroll-behavior-y:none;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+  overscroll-behavior-y:none;
+  background-color:#051019;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 14% 8%,rgba(189,148,93,.07),transparent 22%),
+    radial-gradient(circle at 90% 6%,rgba(127,167,194,.07),transparent 24%),
+    linear-gradient(180deg,var(--bg),var(--bg2) 48%,#06121b 100%);
+}
+body::before{
+  content:"";
+  position:absolute;inset:0;pointer-events:none;opacity:.045;
+  background-image:
+    linear-gradient(rgba(112,142,161,.16) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(112,142,161,.16) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:linear-gradient(to bottom,#000,transparent 78%);
+}
+button,input,textarea,select{font:inherit}
+button{color:inherit}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1240px,calc(100% - 28px));margin:auto}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.kicker{font-size:10px;line-height:1.2;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);font-weight:850}
+.muted{color:var(--muted)}
+h1,h2,h3{margin:0}
+h1{font-size:clamp(38px,5vw,68px);line-height:.95;letter-spacing:-.05em}
+h2{font-size:clamp(28px,3vw,44px);line-height:1.04;letter-spacing:-.035em}
+h3{font-size:20px;letter-spacing:-.02em}
+p{margin:0}
+:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+
+/* Compact shell */
+.topbar{
+  position:sticky;top:0;z-index:90;height:var(--header);
+  background:#06131d;
+  border-bottom:1px solid rgba(189,148,93,.18);
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+.topbar::after{
+  content:"";position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);
+  width:min(560px,56vw);height:1px;background:linear-gradient(90deg,transparent,rgba(224,189,135,.52),transparent);
+}
+.toprow{height:64px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.appmark{
+  width:44px;height:44px;flex:0 0 44px;position:relative;border-radius:50%;
+  display:grid;place-items:center;overflow:hidden;
+  border:1px solid rgba(224,189,135,.58);
+  background:
+    radial-gradient(circle at 46% 38%,rgba(224,189,135,.11),transparent 28%),
+    radial-gradient(circle at center,#0b2331 0 54%,#071823 55% 100%);
+  color:var(--gold2);
+  box-shadow:
+    inset 0 0 0 2px rgba(5,15,22,.95),
+    inset 0 0 0 4px rgba(224,189,135,.08),
+    0 8px 20px rgba(0,0,0,.26);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.appmark::before{
+  content:"";position:absolute;inset:3px;border-radius:50%;
+  border:1px solid rgba(127,167,194,.20);pointer-events:none;
+}
+.appmark svg{width:39px;height:39px;display:block}
+.appmark .rose-ring{fill:none;stroke:rgba(224,189,135,.46);stroke-width:.8}
+.appmark .minor-ring{fill:none;stroke:rgba(127,167,194,.34);stroke-width:.65;stroke-dasharray:1.4 2.1}
+.appmark .north{fill:#e0bd87;stroke:#f2d5a5;stroke-width:.45}
+.appmark .south{fill:#9f7a49;stroke:#d6b47d;stroke-width:.45}
+.appmark .tick{stroke:rgba(217,183,125,.74);stroke-width:.65;stroke-linecap:round}
+.appmark .compass-needle{
+  transform-origin:24px 24px;
+  animation:humosNeedle 5.8s ease-in-out infinite;
+}
+@keyframes humosNeedle{
+  0%,100%{transform:rotate(-4deg)}
+  50%{transform:rotate(4deg)}
+}
+
+.appmark .hub{fill:#e0bd87;stroke:#071823;stroke-width:1.2}
+.appmark .inclinometer{
+  transform-origin:24px 24px;
+  animation:navalHeel 4.6s ease-in-out infinite;
+}
+.appmark .inclinometer-line{stroke:#f2d7aa;stroke-width:1.35;stroke-linecap:round}
+.appmark .inclinometer-weight{fill:#d77769;stroke:#f3dfbd;stroke-width:.45}
+.appmark .north-mark{fill:#e9c991;font:700 5px Georgia,serif}
+@keyframes navalHeel{
+  0%,100%{transform:rotate(-13deg)}
+  50%{transform:rotate(13deg)}
+}
+.brandtext{min-width:0}
+.brandtext strong{
+  display:block;
+  font-size:16px;
+  line-height:1;
+  letter-spacing:.145em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  color:#e0bd87;
+  font-weight:900;
+  text-shadow:
+    0 0 12px rgba(224,189,135,.12),
+    0 1px 0 rgba(255,255,255,.035);
+}
+.brandtext span{
+  display:block;
+  margin-top:4px;
+  font-size:8.5px;
+  line-height:1;
+  letter-spacing:.145em;
+  text-transform:uppercase;
+  color:#f1f4f5;
+  white-space:nowrap;
+  font-weight:760;
+  text-shadow:
+    0 0 10px rgba(255,255,255,.045),
+    0 1px 0 rgba(0,0,0,.28);
+}
+.desktop-nav{display:flex;justify-content:center;align-items:center;gap:4px;min-width:0}
+.desktop-nav a{
+  min-height:38px;padding:0 10px;border:1px solid transparent;border-radius:6px;display:flex;align-items:center;gap:6px;
+  color:#9aabb6;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;white-space:nowrap;
+}
+.desktop-nav a span{font-family:Georgia,serif;color:#80694c;font-size:9px}
+.desktop-nav a:hover,.desktop-nav a.active{
+  color:#edf2f4;border-color:rgba(189,148,93,.24);background:rgba(189,148,93,.05);
+}
+.nav-quick{
+  width:34px;height:34px;flex:0 0 34px;border:1px solid rgba(86,110,126,.24);border-radius:0;cursor:pointer;position:relative;
+  margin:0 7px;display:grid;place-items:center;color:var(--gold2);
+  background:
+    linear-gradient(var(--gold),var(--gold)) left 3px top 3px/8px 1px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) left 3px top 3px/1px 8px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 3px top 3px/8px 1px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 3px top 3px/1px 8px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) left 3px bottom 3px/8px 1px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) left 3px bottom 3px/1px 8px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 3px bottom 3px/8px 1px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 3px bottom 3px/1px 8px no-repeat,
+    rgba(255,255,255,.012);
+  transition:transform .18s ease,color .18s ease,border-color .18s ease,background-color .18s ease;
+}
+
+.nav-quick:hover,.nav-quick[aria-expanded="true"]{
+  transform:translateY(-1px);color:var(--gold3);border-color:rgba(224,189,135,.58);background-color:rgba(189,148,93,.035);
+}
+.nav-quick-label{
+  position:absolute;left:50%;top:41px;transform:translateX(-50%);
+  white-space:nowrap;font-size:7px;letter-spacing:.10em;text-transform:uppercase;color:#718592;
+  opacity:0;pointer-events:none;transition:opacity .15s ease;
+}
+.nav-quick:hover .nav-quick-label{opacity:1}
+
+.headtools{display:flex;align-items:center;gap:7px}
+.clockbox{text-align:right;min-width:92px}
+.clockbox strong{display:block;font-size:15px;letter-spacing:.06em;color:var(--gold3);font-variant-numeric:tabular-nums}
+.clockbox span{display:block;margin-top:1px;font-size:8px;letter-spacing:.13em;text-transform:uppercase;color:#718592}
+.iconbtn{
+  min-width:40px;width:40px;height:40px;border:1px solid rgba(86,110,126,.24);border-radius:0;
+  background:
+    linear-gradient(var(--gold),var(--gold)) left 4px top 4px/8px 1px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) left 4px top 4px/1px 8px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 4px top 4px/8px 1px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 4px top 4px/1px 8px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) left 4px bottom 4px/8px 1px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) left 4px bottom 4px/1px 8px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 4px bottom 4px/8px 1px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 4px bottom 4px/1px 8px no-repeat,
+    rgba(255,255,255,.014);
+  display:grid;place-items:center;cursor:pointer;color:#cad5db;
+  transition:color .16s ease,border-color .16s ease,background-color .16s ease,transform .16s ease;
+}
+.iconbtn:hover{
+  border-color:rgba(224,189,135,.54);color:var(--gold3);background-color:rgba(189,148,93,.035);transform:translateY(-1px)
+}
+.ui-icon{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+
+#menuBtn{display:none}
+
+/* Mobile drawer - closed by default, so header never consumes the screen */
+.navdrawer{
+  position:fixed;
+  z-index:117;
+  top:calc(var(--header) + 8px);
+  right:max(9px,env(safe-area-inset-right));
+  width:min(360px,calc(100% - 18px));
+  max-height:calc(var(--vvh) - var(--header) - 18px);
+  overflow:auto;
+  overscroll-behavior:contain;
+  background:
+    linear-gradient(180deg,rgba(12,31,44,.91),rgba(5,18,27,.95));
+  -webkit-backdrop-filter:blur(16px) saturate(120%);
+  backdrop-filter:blur(16px) saturate(120%);
+  border:1px solid rgba(224,189,135,.26);
+  border-radius:5px;
+  box-shadow:
+    0 22px 58px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.025);
+  padding:9px;
+  transform:translate3d(0,-7px,0) scale(.985);
+  transform-origin:top right;
+  opacity:0;
+  pointer-events:none;
+  transition:
+    transform .19s cubic-bezier(.2,.8,.2,1),
+    opacity .16s ease;
+}
+.navdrawer.open{transform:translate3d(0,0,0) scale(1);opacity:1;pointer-events:auto}
+.navdrawer a{
+  display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:0 12px;border-bottom:1px solid rgba(73,98,115,.18);
+  color:#d4dee3;font-size:13px;font-weight:750;
+}
+.navdrawer a:last-child{border-bottom:0}
+.navdrawer a small{color:#80694c;font-family:Georgia,serif}
+.navdrawer .drawer-note{
+  margin:8px 6px 0;padding:10px;border:1px solid #263f50;border-radius:7px;color:#7f95a2;font-size:11px;line-height:1.5
+}
+
+
+/* HUM-OS surface polish */
+.iconbtn,.runbtn,.btn,.dockbtn,.trigger-buttons button,.quicktriggers button{
+  -webkit-tap-highlight-color:transparent;
+}
+.iconbtn{
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    background .16s ease,
+    color .16s ease;
+}
+.iconbtn:hover{
+  transform:translateY(-1px);
+  border-color:rgba(224,189,135,.52);
+  background:rgba(224,189,135,.055);
+}
+.iconbtn:active{transform:translateY(0) scale(.96)}
+.modalhead{
+  position:sticky;
+  top:0;
+  z-index:3;
+  background:rgba(8,24,35,.94);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+}
+.field:focus{
+  border-color:rgba(224,189,135,.62);
+  box-shadow:
+    0 0 0 3px rgba(224,189,135,.055),
+    inset 0 0 0 1px rgba(224,189,135,.035);
+}
+.navdrawer a{
+  border-radius:5px;
+  transition:background .15s ease,color .15s ease,transform .15s ease;
+}
+.navdrawer a:hover,.navdrawer a:focus-visible{
+  background:rgba(224,189,135,.045);
+  color:#f0f3f4;
+  transform:translateX(-1px);
+}
+
+/* Hero/dashboard */
+.hero{padding:22px 0 12px}
+.dashboard{
+  position:relative;overflow:hidden;border:1px solid #243c4d;border-radius:5px;
+  background:
+    radial-gradient(circle at 82% 14%,rgba(127,167,194,.08),transparent 28%),
+    radial-gradient(circle at 18% 12%,rgba(189,148,93,.08),transparent 26%),
+    linear-gradient(180deg,rgba(10,24,34,.985),rgba(6,16,24,.995));
+  box-shadow:var(--shadow);
+}
+.dashboard::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;
+  background:
+    radial-gradient(circle at 72% 46%,transparent 0 64px,rgba(224,189,135,.20) 65px,transparent 66px),
+    radial-gradient(circle at 72% 46%,transparent 0 126px,rgba(127,167,194,.13) 127px,transparent 128px),
+    radial-gradient(circle at 72% 46%,transparent 0 190px,rgba(224,189,135,.10) 191px,transparent 192px);
+}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);min-height:510px;position:relative;z-index:1}
+.dash-main{padding:34px 36px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.dash-side{padding:26px;border-left:1px solid rgba(71,96,114,.26);background:rgba(4,13,20,.34);min-width:0}
+.statusline{
+  display:grid;
+  grid-template-columns:.9fr 1.25fr .9fr .9fr;
+  gap:6px;
+  width:100%;
+  max-width:100%;
+  overflow:visible;
+  pointer-events:none;
+  touch-action:pan-y;
+}
+.status-chip{
+  position:relative;
+  min-width:0;
+  min-height:46px;
+  padding:7px 10px 6px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:4px;
+  border:1px solid rgba(69,100,119,.56);
+  border-radius:5px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006)),
+    rgba(6,20,29,.52);
+  overflow:hidden;
+}
+.status-chip::before{
+  content:"";
+  position:absolute;
+  top:-1px;right:-1px;
+  width:12px;height:12px;
+  border-top:1px solid rgba(224,189,135,.36);
+  border-right:1px solid rgba(224,189,135,.36);
+  pointer-events:none;
+}
+.status-label{
+  color:#637d8b;
+  font-size:6.5px;
+  line-height:1;
+  font-weight:850;
+  letter-spacing:.145em;
+  text-transform:uppercase;
+}
+.status-value{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  max-width:100%;
+  color:#b9c8d0;
+  font-size:9px;
+  line-height:1.1;
+  font-weight:900;
+  letter-spacing:.075em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.live-dot{
+  width:6px;height:6px;flex:0 0 6px;
+  border-radius:50%;
+  background:var(--good);
+  box-shadow:0 0 0 3px rgba(142,182,154,.07),0 0 9px rgba(142,182,154,.18);
+}
+.status-chip.live{
+  border-color:rgba(142,182,154,.27);
+  background:
+    linear-gradient(180deg,rgba(142,182,154,.038),rgba(142,182,154,.012)),
+    rgba(6,20,29,.52);
+}
+.status-chip.live .status-value{color:#d1e4d5}
+.status-chip.good{
+  border-color:rgba(224,189,135,.30);
+  background:
+    linear-gradient(180deg,rgba(189,148,93,.046),rgba(189,148,93,.014)),
+    rgba(6,20,29,.52);
+}
+.status-chip.good .status-value{color:#edd2a7}
+
+.hero-copy{margin-top:26px;max-width:660px}
+.hero-copy h1{margin-top:10px}
+.hero-copy h1 em{font-style:normal;color:var(--gold2)}
+.hero-copy p{margin-top:14px;color:#9db0bc;line-height:1.65;font-size:14px;max-width:620px}
+.runtime-strip{
+  margin-top:24px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
+  border:1px solid rgba(189,148,93,.28);border-radius:5px;background:rgba(5,15,22,.66);padding:7px;
+}
+.runtime-strip input{
+  min-width:0;width:100%;height:44px;border:0;outline:0;background:transparent;color:#e9eff2;padding:0 12px;font-size:15px;
+}
+.runtime-strip input::placeholder{color:#6f8491}
+.runbtn{
+  min-height:42px;padding:0 16px;border:1px solid rgba(224,189,135,.52);border-radius:6px;cursor:pointer;
+  background:linear-gradient(180deg,#e0bd87,#b98e56);color:#07111a;text-transform:uppercase;letter-spacing:.10em;font-size:10px;font-weight:900;
+}
+.quicktriggers{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.quicktriggers button{
+  min-height:32px;padding:0 11px;border:1px solid #294556;border-radius:999px;background:rgba(255,255,255,.018);cursor:pointer;
+  color:#9fb0ba;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;
+  touch-action:pan-y;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.quicktriggers button.active{
+  border-color:rgba(224,189,135,.70);background:rgba(189,148,93,.12);color:#f1d7af;
+  box-shadow:inset 0 0 0 1px rgba(224,189,135,.08);
+}
+.microflow{
+  margin-top:22px;padding-top:16px;border-top:1px solid rgba(189,148,93,.16);
+  color:#748995;font-size:10px;line-height:1.65;letter-spacing:.07em;text-transform:uppercase;
+}
+.microflow b{color:#b9996d}
+
+.timer-card{
+  position:relative;min-height:206px;border:1px solid #2a4456;border-radius:5px;background:linear-gradient(180deg,rgba(11,29,41,.82),rgba(7,18,27,.78));
+  padding:20px;overflow:hidden;
+}
+.compass{
+  position:absolute;right:-32px;top:-34px;width:180px;height:180px;opacity:.16;pointer-events:none;
+  animation:rotateCompass 70s linear infinite;
+}
+.compass svg{width:100%;height:100%}
+@keyframes rotateCompass{to{transform:rotate(360deg)}}
+.timer-head{display:flex;justify-content:space-between;gap:14px;align-items:start}
+.timer-head strong{font-size:13px;text-transform:uppercase;letter-spacing:.12em}
+.timer-head span{font-size:9px;color:#768b98;text-transform:uppercase;letter-spacing:.11em}
+.big-timer{margin-top:26px;font-size:clamp(32px,4.5vw,56px);line-height:1;font-weight:780;letter-spacing:-.04em;color:#f0d6aa;font-variant-numeric:tabular-nums;white-space:nowrap}
+.timer-units{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;max-width:420px}
+.timer-units span{font-size:8px;text-transform:uppercase;letter-spacing:.15em;color:#718692}
+.timer-foot{margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.timer-foot button{
+  min-height:34px;padding:0 11px;border:1px solid #2d4b5d;border-radius:6px;background:rgba(255,255,255,.02);cursor:pointer;
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#b7c6cf;font-weight:800;
+}
+.timer-foot small{color:#708490;font-size:10px;line-height:1.4}
+
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+.metric{
+  min-height:112px;padding:14px;border:1px solid #294455;border-radius:5px;background:rgba(9,24,34,.68);position:relative;overflow:hidden;
+}
+.metric::after{content:"";position:absolute;right:8px;top:8px;width:10px;height:10px;border-right:1px solid rgba(224,189,135,.52);border-top:1px solid rgba(224,189,135,.52)}
+.metric span{display:block;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#728793;font-weight:800}
+.metric strong{display:block;margin-top:10px;font-family:Georgia,serif;font-size:26px;color:#edf2f4}
+.metric small{display:block;margin-top:5px;color:#90a4b0;font-size:11px;line-height:1.35}
+
+/* Section common */
+.section{padding:52px 0}
+.section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:20px}
+.section-head p{max-width:590px;color:var(--muted);line-height:1.6;font-size:13px}
+.panel{
+  border:1px solid #243d4f;border-radius:var(--radius);background:linear-gradient(180deg,rgba(11,26,37,.96),rgba(7,18,27,.98));box-shadow:var(--shadow);
+}
+.panel-pad{padding:22px}
+.two{display:grid;grid-template-columns:1.04fr .96fr;gap:16px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.label{display:block;color:#9bb0bd;font-size:10px;letter-spacing:.10em;text-transform:uppercase;font-weight:800;margin-bottom:7px}
+.helper{color:#718693;font-size:11px;line-height:1.5}
+input.field,textarea.field,select.field{
+  width:100%;border:1px solid #2b485a;border-radius:7px;background:#071722;color:#edf2f4;padding:11px 12px;outline:0;font-size:14px;
+}
+input.field,select.field{height:44px}
+textarea.field{min-height:110px;resize:vertical;line-height:1.5}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.formgrid .full{grid-column:1/-1}
+.actionrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{
+  min-height:42px;padding:0 14px;border:1px solid #2d4a5d;border-radius:7px;background:linear-gradient(180deg,#0c1d29,#091721);
+  color:#dce5e9;cursor:pointer;font-size:10px;letter-spacing:.09em;text-transform:uppercase;font-weight:850;
+}
+.btn.primary{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#07111a;border-color:var(--gold)}
+.btn:hover{border-color:rgba(224,189,135,.58)}
+.btn.danger{border-color:rgba(200,121,114,.35);color:#efc6c1;background:rgba(200,121,114,.05)}
+
+.state-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+.state{
+  padding:12px;border:1px solid #294657;border-radius:5px;background:#091b28;min-width:0;
+}
+.state span{display:block;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:#6f8490}
+.state strong{display:block;margin-top:7px;font-size:14px;white-space:normal}
+.intensity-wrap{margin-top:14px}
+.range-row{display:grid;grid-template-columns:1fr 54px;gap:10px;align-items:center}
+input[type=range]{width:100%;accent-color:var(--gold)}
+.range-value{
+  height:38px;border:1px solid #2a4759;border-radius:7px;display:grid;place-items:center;font-variant-numeric:tabular-nums;color:var(--gold3);font-weight:800
+}
+.routebox{margin-top:14px;padding:16px;border:1px solid rgba(224,189,135,.28);border-radius:5px;background:rgba(189,148,93,.045)}
+.routebox .route-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.routebox .route-title b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2)}
+.routebox .route-title span{font-size:9px;color:#7a8f9b;text-transform:uppercase;letter-spacing:.09em}
+.routebox p{margin-top:10px;color:#c0cdd4;font-size:13px;line-height:1.55}
+.route-trigger{
+  display:inline-flex;align-items:center;min-height:26px;margin-top:10px;padding:0 9px;
+  border:1px solid rgba(224,189,135,.26);
+  background:rgba(189,148,93,.045);
+  color:#bfa478;font-size:9px;font-weight:850;letter-spacing:.09em;text-transform:uppercase;
+}
+.routebox.route-focus{
+  animation:routeArrival .72s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes routeArrival{
+  0%{box-shadow:0 0 0 0 rgba(224,189,135,.0);transform:translateY(5px)}
+  45%{box-shadow:0 0 0 2px rgba(224,189,135,.15),0 14px 34px rgba(0,0,0,.22);transform:translateY(0)}
+  100%{box-shadow:0 0 0 1px rgba(224,189,135,.07) inset,0 10px 30px rgba(0,0,0,.16)}
+}
+
+.routebox.route-focus{
+  border-color:rgba(224,189,135,.76);
+  background:linear-gradient(180deg,rgba(189,148,93,.105),rgba(189,148,93,.045));
+  box-shadow:0 0 0 1px rgba(224,189,135,.09) inset,0 10px 30px rgba(0,0,0,.16);
+}
+.logitem.log-focus{
+  border-color:rgba(224,189,135,.68);
+  background:rgba(189,148,93,.075);
+  box-shadow:0 0 0 1px rgba(224,189,135,.07) inset;
+}
+.route-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.route-actions button{
+  min-height:36px;padding:0 11px;border:1px solid #2d4b5e;border-radius:6px;background:rgba(255,255,255,.02);cursor:pointer;
+  color:#b7c6ce;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:850;
+}
+.route-actions button.primary{border-color:rgba(224,189,135,.48);background:rgba(189,148,93,.09);color:#eed4aa}
+
+/* Habit charters */
+.habit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.habit-card{
+  position:relative;padding:17px;border:1px solid #284657;border-radius:5px;background:rgba(8,24,35,.78);cursor:pointer;min-height:158px;text-align:left;
+}
+.habit-card.active{border-color:rgba(224,189,135,.58);background:linear-gradient(180deg,rgba(189,148,93,.085),rgba(8,24,35,.82))}
+.habit-card .top{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.habit-card .code{font-size:9px;text-transform:uppercase;letter-spacing:.11em;color:#80694d}
+.habit-card h3{margin-top:14px;font-size:22px}
+.habit-card p{margin-top:8px;color:#8fa4af;font-size:12px;line-height:1.45}
+.habit-card .mode{display:inline-flex;min-height:24px;align-items:center;padding:0 8px;border:1px solid #345366;border-radius:999px;font-size:8px;letter-spacing:.10em;text-transform:uppercase;color:#c3d0d6;font-weight:800}
+.habit-card .selectmark{position:absolute;right:13px;bottom:12px;color:rgba(224,189,135,.28);font-size:24px}
+
+.charter-preview{padding:20px}
+.kv{display:grid;grid-template-columns:125px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(74,99,115,.20)}
+.kv:last-child{border-bottom:0}
+.kv span{font-size:9px;text-transform:uppercase;letter-spacing:.10em;color:#6e8390}
+.kv strong{font-size:13px;line-height:1.5}
+
+/* Patterns */
+.pattern{
+  padding:16px;border:1px solid #294657;border-radius:5px;background:#091b28;min-height:160px;position:relative;overflow:hidden;
+}
+.pattern .pct{font-family:Georgia,serif;font-size:31px;color:#edd1a4}
+.pattern .name{margin-top:7px;font-size:16px;font-weight:760}
+.pattern p{margin-top:8px;color:#869aa6;font-size:12px;line-height:1.5}
+.pattern .bar{height:4px;background:#0b1116;border-radius:999px;margin-top:14px;overflow:hidden}
+.pattern .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:999px}
+
+/* Progress */
+.progress-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.progress-card{padding:16px;border:1px solid #294657;border-radius:5px;background:#091b28;min-height:112px}
+.progress-card span{display:block;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:#6d8290}
+.progress-card strong{display:block;margin-top:9px;font-size:28px;font-family:Georgia,serif;color:#f0d4a7;word-break:break-word}
+.progress-card small{display:block;margin-top:6px;color:#8195a1;font-size:10px}
+.loglist{display:grid;gap:8px;margin-top:12px}
+.logitem{padding:13px;border:1px solid #274455;border-radius:5px;background:#081a27}
+.logitem .loghead{display:flex;justify-content:space-between;gap:10px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:#9ab0bd}
+.logitem p{margin-top:7px;color:#879ca8;font-size:12px;line-height:1.5}
+
+/* Harbour */
+.port{
+  min-height:150px;padding:16px;border:1px solid #294657;border-radius:5px;background:#091b28;position:relative;overflow:hidden;
+}
+.port::after{content:"◌";position:absolute;right:10px;bottom:4px;font-family:Georgia,serif;font-size:42px;color:rgba(224,189,135,.09)}
+.port small{display:block;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#80694d}
+.port h3{margin-top:10px}
+.port p{margin-top:8px;color:#879aa6;font-size:12px;line-height:1.5}
+.port button{margin-top:13px}
+
+/* Bottom action dock */
+.current-map{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.19;z-index:0;
+}
+.current-map svg{width:100%;height:100%;display:block}
+.current-map path{
+  fill:none;stroke-linecap:round;stroke-width:1.1;
+  stroke-dasharray:10 18;animation:currentFlow 17s linear infinite;
+}
+.current-map path:nth-child(2){animation-duration:24s;animation-direction:reverse}
+.current-map path:nth-child(3){animation-duration:31s;opacity:.55}
+@keyframes currentFlow{to{stroke-dashoffset:-360}}
+
+.actiondock{
+  position:fixed;
+  z-index:120;
+  left:50%;
+  bottom:var(--safe-bottom);
+  width:min(548px,calc(100% - 18px));
+  height:62px;
+  transform:translate3d(-50%,0,0);
+  border:1px solid rgba(224,189,135,.28);
+  border-radius:999px;
+  background:
+    linear-gradient(180deg,rgba(17,38,52,.70),rgba(5,18,27,.78)),
+    rgba(6,19,29,.68);
+  -webkit-backdrop-filter:blur(18px) saturate(128%);
+  backdrop-filter:blur(18px) saturate(128%);
+  box-shadow:
+    0 18px 48px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.035),
+    inset 0 0 0 1px rgba(224,189,135,.018),
+    0 0 28px rgba(127,167,194,.035);
+  overflow:visible;
+  opacity:1;
+  pointer-events:auto;
+  transition:
+    transform .28s cubic-bezier(.2,.8,.2,1),
+    opacity .20s ease,
+    border-color .20s ease,
+    background .20s ease;
+  will-change:transform,opacity;
+}
+.actiondock.collapsed{
+  transform:translate3d(-50%,92px,0);
+  opacity:0;
+  pointer-events:none;
+}
+.dockgrid{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr 68px 1fr 1fr;
+  align-items:center;
+  border-radius:999px;
+  overflow:visible;
+}
+.dockbtn{
+  height:58px;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  color:#aebdc6;
+  font-size:8px;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  font-weight:850;
+  transition:color .18s ease,background .18s ease;
+  touch-action:manipulation;
+}
+.dockbtn:nth-child(1),
+.dockbtn:nth-child(2){
+  border-right:1px solid rgba(74,99,115,.17);
+}
+.dockbtn:nth-last-child(1),
+.dockbtn:nth-last-child(2){
+  border-left:1px solid rgba(74,99,115,.17);
+}
+.dockbtn:hover,.dockbtn:active{
+  background:rgba(189,148,93,.05);
+  color:#edf2f4;
+}
+.dockbtn .ui-icon{
+  width:17px;height:17px;color:var(--gold2);
+  filter:drop-shadow(0 0 6px rgba(224,189,135,.10));
+}
+.dock-center{
+  height:62px;
+  display:grid;
+  place-items:center;
+  position:relative;
+  z-index:3;
+}
+
+/* HUM-OS scroll spy / return-to-surface control */
+.scrolltop{
+  --scroll-angle:0deg;
+  position:relative !important;
+  inset:auto !important;
+  z-index:4 !important;
+  width:54px !important;
+  height:54px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:50% !important;
+  display:grid !important;
+  place-items:center !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  pointer-events:auto !important;
+  cursor:pointer;
+  color:#e0bd87;
+  background:
+    conic-gradient(
+      from -90deg,
+      #e0bd87 0deg var(--scroll-angle),
+      rgba(224,189,135,.13) var(--scroll-angle) 360deg
+    ) !important;
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.34),
+    0 0 0 1px rgba(224,189,135,.17);
+  transform:translateZ(0);
+  -webkit-transform:translateZ(0);
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.scrolltop::before{
+  content:"";
+  position:absolute;
+  inset:4px;
+  border-radius:50%;
+  background:rgba(5,18,27,.86);
+  border:1px solid rgba(224,189,135,.34);
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.016),
+    inset 0 0 24px rgba(127,167,194,.05);
+}
+.scrolltop::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:50%;
+  border:1px solid rgba(127,167,194,.08);
+  pointer-events:none;
+}
+.scrolltop-inner{
+  position:relative;
+  z-index:2;
+  width:44px;height:44px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+}
+.scrolltop-percent{
+  display:none;
+  color:#f4d9ac;
+  font-size:9px;
+  line-height:1;
+  font-weight:900;
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 0 8px rgba(224,189,135,.18);
+}
+.scrolltop-arrow{
+  width:19px;height:19px;
+  display:block;
+  fill:none;
+  stroke:#e0bd87;
+  stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:drop-shadow(0 0 6px rgba(224,189,135,.28));
+  animation:humosArrowPulse 1.18s ease-in-out infinite;
+}
+.scrolltop.scrolling .scrolltop-percent{display:block}
+.scrolltop.scrolling .scrolltop-arrow{display:none}
+.scrolltop:active{transform:translateZ(0) scale(.96)}
+@keyframes humosArrowPulse{
+  0%,100%{opacity:.34;transform:translateY(2px)}
+  50%{opacity:1;transform:translateY(-2px)}
+}
+
+/* Scroll spy sits above the center of the pill, not in a screen corner. */
+.scrollspy-indicator{
+  position:fixed;
+  left:50%;
+  bottom:calc(var(--safe-bottom) + 70px);
+  z-index:119;
+  min-height:27px;
+  max-width:min(220px,calc(100vw - 28px));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 10px;
+  border:1px solid rgba(224,189,135,.25);
+  border-radius:999px;
+  background:#071722;
+  color:#aebfc8;
+  box-shadow:0 10px 28px rgba(0,0,0,.30);
+  font-size:8px;
+  line-height:1;
+  font-weight:850;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  opacity:0;
+  transform:translate3d(-50%,5px,0);
+  pointer-events:none;
+  transition:opacity .16s ease,transform .18s ease;
+}
+.scrollspy-indicator.show{
+  opacity:1;
+  transform:translate3d(-50%,0,0);
+}
+.scrollspy-indicator strong{
+  color:#e0bd87;
+  font-weight:900;
+}
+
+/* Modals */
+.modalbackdrop{
+  position:fixed;
+  left:0;right:0;
+  top:var(--header);
+  bottom:0;
+  z-index:118;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+  padding-bottom:max(14px,env(safe-area-inset-bottom));
+  background:rgba(1,5,8,.74);
+  -webkit-backdrop-filter:blur(9px) saturate(108%);
+  backdrop-filter:blur(9px) saturate(108%);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .16s ease;
+  overflow:hidden;
+}
+.modalbackdrop.open{opacity:1;pointer-events:auto}
+.modal{
+  width:min(620px,100%);
+  max-height:min(calc(var(--vvh) - var(--header) - 28px),760px);
+  overflow:auto;
+  overscroll-behavior:contain;
+  border:1px solid rgba(224,189,135,.34);
+  border-radius:5px;
+  background:
+    linear-gradient(180deg,rgba(12,31,44,.985),rgba(6,20,29,.99));
+  box-shadow:
+    0 26px 70px rgba(0,0,0,.52),
+    inset 0 1px 0 rgba(255,255,255,.025);
+  scrollbar-width:thin;
+  scrollbar-color:rgba(224,189,135,.30) transparent;
+}
+.modalhead{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px 18px;border-bottom:1px solid rgba(76,100,116,.24)}
+.modalhead h3{font-size:19px}
+.modalbody{padding:18px}
+.closebtn{width:38px;height:38px;border:1px solid #2c495a;border-radius:7px;background:transparent;cursor:pointer;color:#b9c7cf;font-size:18px}
+
+/* Calm timer */
+.calm-ring{
+  width:210px;height:210px;margin:4px auto 12px;position:relative;display:grid;place-items:center;
+}
+.calm-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.calm-ring circle{fill:none;stroke-width:7}
+.calm-ring .track{stroke:#173142}
+.calm-ring .progress{stroke:var(--gold2);stroke-linecap:round;stroke-dasharray:565.49;stroke-dashoffset:0;transition:stroke-dashoffset .35s linear}
+.breath-orb{
+  width:84px;height:84px;border-radius:50%;display:grid;place-items:center;position:relative;
+  background:
+    radial-gradient(circle at 35% 30%,rgba(238,214,174,.34),transparent 34%),
+    radial-gradient(circle at 50% 55%,rgba(127,167,194,.22),rgba(189,148,93,.20) 58%,rgba(7,22,32,.86) 76%);
+  border:1px solid rgba(224,189,135,.52);
+  box-shadow:0 0 0 9px rgba(189,148,93,.035),0 0 36px rgba(127,167,194,.08);
+  transform:scale(.68);
+  animation:breathCurrent 12s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.breath-orb::before{
+  content:"";position:absolute;inset:-18px;border-radius:50%;border:1px dashed rgba(127,167,194,.23);
+}
+.breath-orb[data-phase="inhale"]{border-color:rgba(127,167,194,.72)}
+.breath-orb[data-phase="hold"]{border-color:rgba(224,189,135,.72)}
+.breath-orb[data-phase="exhale"]{border-color:rgba(142,182,154,.62)}
+@keyframes breathCurrent{
+  0%{
+    transform:scale(.68);
+    box-shadow:0 0 0 8px rgba(127,167,194,.025),0 0 22px rgba(127,167,194,.06);
+    filter:saturate(.88);
+  }
+  33.333%{
+    transform:scale(1.30);
+    box-shadow:0 0 0 20px rgba(127,167,194,.060),0 0 64px rgba(127,167,194,.20);
+    filter:saturate(1.12);
+  }
+  66.666%{
+    transform:scale(1.30);
+    box-shadow:0 0 0 20px rgba(224,189,135,.050),0 0 58px rgba(224,189,135,.16);
+    filter:saturate(1.04);
+  }
+  100%{
+    transform:scale(.68);
+    box-shadow:0 0 0 8px rgba(142,182,154,.025),0 0 22px rgba(127,167,194,.06);
+    filter:saturate(.88);
+  }
+}
+.calm-time{font-size:20px;font-weight:800;color:#f0d4a7;font-variant-numeric:tabular-nums;position:relative;z-index:2}
+.breath-phase{text-align:center;margin:4px auto 2px;font-size:20px;font-weight:800;letter-spacing:.02em;color:#eed1a3}
+.breath-instruction{text-align:center;color:#a4b5be;font-size:13px;line-height:1.55;min-height:42px}
+.breath-cycle{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px 0 12px;flex-wrap:wrap}
+.breath-cycle span{
+  min-height:26px;display:inline-flex;align-items:center;padding:0 9px;border:1px solid #29495b;
+  color:#8297a3;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:850;
+}
+.breath-cycle span.active{color:#f0d6ab;border-color:rgba(224,189,135,.52);background:rgba(189,148,93,.07)}
+.calm-caption{text-align:center;color:#7d929e;font-size:11px;line-height:1.55}
+
+/* Toast */
+.toast{
+  position:fixed !important;
+  right:14px !important;
+  right:calc(14px + env(safe-area-inset-right)) !important;
+  bottom:82px !important;
+  bottom:calc(82px + env(safe-area-inset-bottom)) !important;
+  z-index:2147482100 !important;
+  max-width:min(340px,calc(100vw - 28px));
+  padding:12px 14px;
+  border:1px solid rgba(224,189,135,.34);
+  border-radius:6px;
+  background:#081b28;
+  color:#e9eff2;
+  font-size:12px;
+  line-height:1.45;
+  box-shadow:0 18px 42px rgba(0,0,0,.46);
+  opacity:0;
+  transform:translate3d(8px,8px,0);
+  pointer-events:none;
+  transition:opacity .18s ease,transform .20s cubic-bezier(.2,.8,.2,1);
+}
+.toast::before{
+  content:"";
+  position:absolute;
+  right:7px;top:7px;
+  width:7px;height:7px;
+  border-top:1px solid var(--gold2);
+  border-right:1px solid var(--gold2);
+}
+.toast.show{opacity:1;transform:translate3d(0,0,0)}
+@media(max-width:640px){
+  .toast{
+    right:10px !important;
+    right:calc(10px + env(safe-area-inset-right)) !important;
+    bottom:74px !important;
+    bottom:calc(74px + env(safe-area-inset-bottom)) !important;
+    max-width:min(310px,calc(100vw - 20px));
+  }
+}
+
+.premium-footer{
+  position:relative;
+  overflow:hidden;
+  padding:84px 0 80px;
+  border-top:1px solid rgba(224,189,135,.18);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(127,167,194,.055),transparent 34%),
+    linear-gradient(180deg,#06131d 0%,#030b11 100%);
+}
+.footer-current{
+  position:absolute;left:-8%;right:-8%;top:18px;height:170px;opacity:.16;pointer-events:none;
+}
+.footer-current svg{width:100%;height:100%;display:block}
+.footer-current path{fill:none;stroke-linecap:round;stroke-width:1.05;stroke-dasharray:none}
+.footer-shell{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+}
+.footer-emblem{
+  width:44px;height:44px;position:relative;margin-bottom:13px;border-radius:50%;
+}
+.footer-emblem-ring{
+  position:absolute;inset:1px;border:1px solid rgba(224,189,135,.48);border-radius:50%;
+  box-shadow:inset 0 0 0 4px rgba(224,189,135,.025);
+}
+.footer-emblem-cross{position:absolute;background:#d9b77d;opacity:.70}
+.footer-emblem-cross.vertical{width:1px;height:29px;left:21.5px;top:7.5px}
+.footer-emblem-cross.horizontal{height:1px;width:29px;top:21.5px;left:7.5px}
+.footer-emblem-core{
+  position:absolute;width:7px;height:7px;left:18.5px;top:18.5px;border-radius:50%;
+  background:#d9b77d;box-shadow:0 0 12px rgba(224,189,135,.18);
+}
+.footer-identity{display:flex;flex-direction:column;align-items:center;gap:4px}
+.footer-identity strong{
+  color:#e0bd87;font-size:13px;letter-spacing:.19em;text-transform:uppercase;font-weight:900;
+}
+.footer-identity span{
+  color:#a8bac4;font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;
+}
+.footer-identity small{
+  color:#667d89;font-size:8px;letter-spacing:.08em;text-transform:uppercase;
+}
+.footer-divider{
+  width:min(460px,72%);height:1px;margin:20px 0;
+  background:linear-gradient(90deg,transparent,rgba(224,189,135,.28),transparent);
+}
+.footer-governance{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;
+  color:#738996;font-size:8px;line-height:1.5;letter-spacing:.075em;text-transform:uppercase;
+}
+.footer-governance span{position:relative}
+.footer-governance span:not(:last-child)::after{
+  content:"·";position:absolute;right:-10px;color:#9f815a;
+}
+.footer-meta{
+  margin-top:18px;margin-bottom:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px 15px;
+  color:#556c79;font-size:8px;line-height:1.5;letter-spacing:.065em;text-transform:uppercase;
+}
+.footer-meta span:first-child{color:#8d9da6}
+.premium-footer .footer-shell > *:last-child{margin-bottom:0 !important}
+.premium-footer .footer-meta{padding-bottom:0 !important}
+@media(max-width:640px){
+  .premium-footer{padding:70px 0 80px}
+  .footer-divider{width:84%}
+  .footer-governance,.footer-meta{max-width:330px;gap:7px}
+  .footer-governance span{width:100%}
+  .footer-governance span:not(:last-child)::after{display:none}
+  .footer-meta span{width:100%}
+}
+
+
+/* Subtle instrument-grid texture: neutral geometry, not decoration-heavy. */
+.dashboard::after,
+.routebox::before,
+.progress-card:nth-child(odd)::before,
+.metric:nth-child(2)::before,
+.habit-card:nth-child(even)::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:
+    linear-gradient(rgba(224,189,135,.026) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(224,189,135,.024) 1px,transparent 1px),
+    linear-gradient(rgba(224,189,135,.020) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(224,189,135,.018) 1px,transparent 1px);
+  background-size:
+    20px 20px,
+    20px 20px,
+    80px 80px,
+    80px 80px;
+  -webkit-mask-image:linear-gradient(125deg,rgba(0,0,0,.78),rgba(0,0,0,.28) 58%,transparent 96%);
+  mask-image:linear-gradient(125deg,rgba(0,0,0,.78),rgba(0,0,0,.28) 58%,transparent 96%);
+}
+.routebox,
+.progress-card,
+.metric,
+.habit-card{
+  position:relative;
+  overflow:hidden;
+}
+.routebox > *,
+.progress-card > *,
+.metric > *,
+.habit-card > *{
+  position:relative;
+  z-index:1;
+}
+
+/* Tiny reference dots at major grid intersections. */
+.routebox::after,
+.progress-card:nth-child(odd)::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.24;
+  background-image:radial-gradient(circle,rgba(224,189,135,.13) 0 1px,transparent 1.2px);
+  background-size:80px 80px;
+  -webkit-mask-image:linear-gradient(140deg,rgba(0,0,0,.68),transparent 82%);
+  mask-image:linear-gradient(140deg,rgba(0,0,0,.68),transparent 82%);
+}
+
+/* Responsive */
+@media(max-width:980px){
+  .desktop-nav{display:none}
+  #menuBtn{display:grid}
+  .toprow{grid-template-columns:auto 1fr auto}
+  .brand{grid-column:1/3}
+  .headtools{grid-column:3}
+  .dashboard-grid,.two{grid-template-columns:1fr}
+  .dash-side{border-left:0;border-top:1px solid rgba(71,96,114,.26)}
+  .habit-grid{grid-template-columns:repeat(2,1fr)}
+  .three{grid-template-columns:repeat(2,1fr)}
+  .progress-metrics,.four{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  :root{--header:60px}
+  html{scroll-padding-top:72px}
+  .topbar{height:60px}
+  .toprow{height:60px;gap:6px}
+  .wrap{width:min(100% - 18px,1240px)}
+  .brandtext strong{font-size:12.5px;letter-spacing:.125em}
+  .brandtext span{font-size:6.5px;letter-spacing:.085em;white-space:nowrap;margin-top:3px}
+  .clockbox{
+    display:block;
+    min-width:74px;
+    max-width:78px;
+    text-align:right;
+    line-height:1.05;
+  }
+  .clockbox strong{
+    font-size:12px;
+    letter-spacing:.035em;
+    white-space:nowrap;
+  }
+  .clockbox span{
+    margin-top:3px;
+    font-size:6.5px;
+    letter-spacing:.085em;
+    white-space:nowrap;
+  }
+  .appmark{width:40px;height:40px;flex-basis:40px}
+  .appmark svg{width:35px;height:35px}
+  .dashboard-grid{min-height:auto}
+  .dash-main{padding:24px 18px}
+  .dash-side{padding:16px}
+  .statusline{grid-template-columns:1fr 1fr;gap:5px}
+  .status-chip{min-height:42px;padding:6px 8px}
+  .status-label{font-size:6px}
+  .status-value{font-size:8px}
+  .hero-copy{margin-top:20px}
+  .hero-copy p{font-size:13px}
+  .runtime-strip{grid-template-columns:1fr}
+  .runtime-strip .runbtn{width:100%}
+  .big-timer{font-size:34px;white-space:normal}
+  .metric-grid,.state-grid,.habit-grid,.three,.progress-metrics,.four,.formgrid{grid-template-columns:1fr}
+  .section{padding:40px 0}
+  .section-head{align-items:flex-start;flex-direction:column;margin-bottom:16px}
+  .panel-pad{padding:16px}
+  .kv{grid-template-columns:1fr;gap:5px}
+  .logitem .loghead{flex-direction:column}
+  .actiondock{
+    bottom:max(7px,env(safe-area-inset-bottom));
+    width:min(414px,calc(100% - 12px));
+    height:58px;
+  }
+  .dockgrid{grid-template-columns:1fr 1fr 62px 1fr 1fr}
+  .dockbtn{height:54px;font-size:7px}
+  .dock-center{height:58px}
+  .scrolltop{width:50px !important;height:50px !important}
+  .scrolltop-inner{width:40px;height:40px}
+.nav-quick{width:30px;height:30px;flex-basis:30px;margin:0 3px}
+  
+}
+
+/* HUM-OS premium finishing layer */
+.dashboard{isolation:isolate}
+.dashboard-grid{z-index:2}
+.brand:hover .appmark{border-color:rgba(224,189,135,.82);transform:translateY(-1px) scale(1.025);box-shadow:inset 0 0 0 2px rgba(5,15,22,.95),inset 0 0 0 4px rgba(224,189,135,.11),0 10px 24px rgba(0,0,0,.30)}
+.appmark{transition:transform .18s ease,border-color .18s ease}
+.hero-copy h1{text-wrap:balance}
+.hero-copy p{text-wrap:pretty}
+.runbtn{box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 10px 24px rgba(0,0,0,.16)}
+.runbtn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.metric strong,.progress-card strong,.big-timer{font-variant-numeric:tabular-nums}
+
+
+
+/* Hero scroll quality: the entire first screen remains a vertical pan surface. */
+.hero,.dashboard,.dashboard-grid,.dash-main,.dash-side{
+  touch-action:pan-y pinch-zoom;
+}
+.dashboard{
+  contain:layout paint;
+  isolation:isolate;
+}
+.dashboard button,
+.quicktriggers,
+.quicktriggers button{
+  touch-action:pan-y;
+}
+.runtime-strip{
+  touch-action:pan-y;
+}
+
+/* Ambient ocean currents no longer animate SVG dash offsets while the user scrolls.
+   The wrapper itself drifts on the compositor instead. */
+.current-map{
+  will-change:transform,opacity;
+  transform:translate3d(-1.2%,0,0);
+  animation:humosCurrentDrift 18s ease-in-out infinite alternate;
+}
+.current-map path{
+  stroke-dasharray:none !important;
+  stroke-dashoffset:0 !important;
+  animation:none !important;
+}
+@keyframes humosCurrentDrift{
+  from{transform:translate3d(-1.2%,0,0);opacity:.13}
+  to{transform:translate3d(1.2%,0,0);opacity:.19}
+}
+.compass{
+  will-change:transform;
+  transform:translateZ(0);
+}
+
+/* During an actual gesture, decorative motion yields to scrolling immediately. */
+html.humos-user-scrolling .current-map,
+html.humos-user-scrolling .footer-current,
+html.humos-user-scrolling .compass,
+html.humos-user-scrolling .appmark .inclinometer{
+  animation-play-state:paused !important;
+}
+html.humos-user-scrolling .dashboard{
+  box-shadow:none;
+}
+html.humos-user-scrolling .topbar{
+  box-shadow:0 2px 10px rgba(0,0,0,.12);
+}
+
+/* Mobile GPUs benefit from fewer continuously repainted decorative layers. */
+@media (hover:none) and (pointer:coarse){
+  .current-map{opacity:.12;animation-duration:24s}
+  .footer-current path{animation:none !important}
+  .compass{animation-duration:110s}
+  .dashboard::before{opacity:.12}
+}
+
+/* Native/browser hybrid interaction layer */
+html.keyboard-open .actiondock{
+  opacity:0 !important;
+  pointer-events:none !important;
+  transform:translate3d(-50%,88px,0) !important;
+}
+html.keyboard-open .navdrawer{
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+html.keyboard-open .current-map path,
+html.keyboard-open .footer-current path,
+html.keyboard-open .compass,
+html.keyboard-open .appmark .inclinometer,
+html.input-active .current-map path,
+html.input-active .footer-current path{
+  animation-play-state:paused !important;
+}
+html.humos-transition .current-map path,
+html.humos-transition .footer-current path,
+html.humos-transition .compass,
+html.humos-transition .appmark .inclinometer{
+  animation-play-state:paused !important;
+}
+html.input-active .topbar{box-shadow:0 2px 12px rgba(0,0,0,.14)}
+section,.dashboard,.panel,.metric,.progress-card,.habit-card,.port,.routebox{
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
+}
+@media(max-width:640px){
+  input.field,textarea.field,select.field,
+  .runtime-strip input,.runtime-input{
+    font-size:16px !important;
+  }
+  .modalbackdrop{
+    align-items:center;
+    padding-top:10px;
+    padding-bottom:max(10px,env(safe-area-inset-bottom));
+  }
+  html.keyboard-open .modalbackdrop{
+    align-items:flex-start;
+  }
+  html.keyboard-open .modal{
+    max-height:calc(var(--vvh) - var(--header) - 20px);
+  }
+}
+
+
+@media (hover:none) and (pointer:coarse){
+  .dashboard,.panel{box-shadow:0 10px 28px rgba(0,0,0,.22)}
+  .topbar{box-shadow:0 4px 16px rgba(0,0,0,.16)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+  .current-map,.footer-current{opacity:.10}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap toprow">
+    <a class="brand" href="#home" aria-label="HUM-OS home">
+      <span class="appmark" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <circle class="rose-ring" cx="24" cy="24" r="18.5"/>
+          <circle class="minor-ring" cx="24" cy="24" r="14.4"/>
+          <g>
+            <line class="tick" x1="24" y1="4.8" x2="24" y2="8.1"/>
+            <line class="tick" x1="24" y1="39.9" x2="24" y2="43.2"/>
+            <line class="tick" x1="4.8" y1="24" x2="8.1" y2="24"/>
+            <line class="tick" x1="39.9" y1="24" x2="43.2" y2="24"/>
+            <line class="tick" x1="10.4" y1="10.4" x2="12.7" y2="12.7"/>
+            <line class="tick" x1="35.3" y1="35.3" x2="37.6" y2="37.6"/>
+            <line class="tick" x1="37.6" y1="10.4" x2="35.3" y2="12.7"/>
+            <line class="tick" x1="12.7" y1="35.3" x2="10.4" y2="37.6"/>
+          </g>
+          <g class="compass-needle">
+            <path class="north" d="M24 7.3 27.1 22.1 24 19.7 20.9 22.1Z"/>
+            <path class="south" d="M24 40.7 27.1 25.9 24 28.3 20.9 25.9Z"/>
+          </g>
+          <text class="north-mark" x="24" y="6.1" text-anchor="middle">N</text>
+          <g class="inclinometer">
+            <line class="inclinometer-line" x1="12.5" y1="24" x2="35.5" y2="24"/>
+            <circle class="inclinometer-weight" cx="12.5" cy="24" r="1.7"/>
+            <circle class="inclinometer-weight" cx="35.5" cy="24" r="1.7"/>
+          </g>
+          <circle class="hub" cx="24" cy="24" r="2.8"/>
+        </svg>
+      </span>
+      <span class="brandtext">
+        <strong>HUM-OS</strong>
+        <span>Horizon locked. True 000°.</span>
+      </span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="#today" class="active"><span>01</span>Today</a>
+      <a href="#plan"><span>02</span>Plan</a>
+      <a href="#patterns"><span>03</span>Patterns</a>
+      <a href="#progress"><span>04</span>Progress</a>
+      <a href="#support"><span>05</span>Support</a>
+    </nav>
+
+    <div class="headtools">
+      <div class="clockbox" aria-label="Local time">
+        <strong id="localClock">--:--:--</strong>
+        <span id="localDate">Local time</span>
+      </div>
+      <button class="iconbtn" id="quickAddBtn" type="button" aria-label="Add a habit" title="Add habit">
+        <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="iconbtn" id="menuBtn" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="navDrawer">
+        <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="navdrawer" id="navDrawer" aria-label="Mobile navigation">
+  <a href="#today"><span>Today · what needs attention now</span><small>01</small></a>
+  <a href="#plan"><span>Plan · active habit charters</span><small>02</small></a>
+  <a href="#patterns"><span>Patterns · triggers and dependencies</span><small>03</small></a>
+  <a href="#progress"><span>Progress · evidence and event log</span><small>04</small></a>
+  <a href="#support"><span>Support · calm, signal, learn, expert</span><small>05</small></a>
+  <div class="drawer-note">The old ARK-OS terms still exist underneath the product: Observe → Route → Authorize → Structure → Record. The user-facing layer stays simple.</div>
+</nav>
+
+<main id="home">
+  <section class="hero" id="today">
+    <div class="wrap dashboard">
+      <div class="current-map" aria-hidden="true">
+        <svg viewBox="0 0 1200 520" preserveAspectRatio="none">
+          <path d="M-40 122 C170 32 300 222 515 132 S870 46 1240 132" stroke="rgba(224,189,135,.55)"/>
+          <path d="M-80 286 C170 198 338 384 560 278 S908 184 1270 284" stroke="rgba(127,167,194,.58)"/>
+          <path d="M-20 420 C180 338 350 494 620 408 S1010 340 1260 408" stroke="rgba(224,189,135,.34)"/>
+        </svg>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dash-main">
+          <div>
+            <div class="statusline" aria-label="Live runtime status">
+              <span class="status-chip live">
+                <span class="status-label">Runtime</span>
+                <strong class="status-value"><i class="live-dot"></i>Live</strong>
+              </span>
+              <span class="status-chip good">
+                <span class="status-label">Charter</span>
+                <strong class="status-value" id="activeHabitPill">Smoking · STOP</strong>
+              </span>
+              <span class="status-chip" id="signalChip">
+                <span class="status-label">Signal</span>
+                <strong class="status-value" id="signalPill">Stable</strong>
+              </span>
+              <span class="status-chip">
+                <span class="status-label">Local</span>
+                <strong class="status-value" id="networkPill">Ready</strong>
+              </span>
+            </div>
+
+            <div class="hero-copy">
+              <div class="kicker">Between impulse and action, take the helm</div>
+              <h1>Hold your course.<br><em>Rewrite the pattern.</em></h1>
+              <p>HUM-OS turns difficult moments into navigable decisions. Describe what is happening, receive one bounded next action, then keep the evidence that reveals what actually changes your behavior.</p>
+            </div>
+
+            <form class="runtime-strip" id="runtimeForm">
+              <label class="sr-only" for="runtimeInput">What is happening right now?</label>
+              <input id="runtimeInput" autocomplete="off" enterkeyhint="go" autocapitalize="sentences" placeholder="What is happening right now? e.g. Coffee break and I want a cigarette">
+              <button class="runbtn" type="submit">Route this moment →</button>
+            </form>
+
+            <div class="quicktriggers" id="triggerButtons" aria-label="Quick triggers">
+              <button type="button" data-trigger="Coffee">Coffee</button>
+              <button type="button" data-trigger="Stress">Stress</button>
+              <button type="button" data-trigger="Boredom">Boredom</button>
+              <button type="button" data-trigger="Social">Social</button>
+              <button type="button" data-trigger="Night">Night</button>
+              <button type="button" data-trigger="Phone">Phone</button>
+              <button type="button" data-trigger="Impulse">Impulse</button>
+            </div>
+
+            <div class="microflow"><b>Simple view:</b> Notice → interrupt → choose → check → close. <b>Runtime:</b> Observe → Route → Authorize → Structure → Record.</div>
+          </div>
+        </div>
+
+        <aside class="dash-side">
+          <div class="timer-card">
+            <div class="compass" aria-hidden="true">
+              <svg viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(224,189,135,.55)"/>
+                <circle cx="100" cy="100" r="62" fill="none" stroke="rgba(127,167,194,.45)"/>
+                <path d="M100 18l12 72-12-10-12 10z" fill="rgba(224,189,135,.48)" stroke="rgba(224,189,135,.7)"/>
+                <path d="M100 182l12-72-12 10-12-10z" fill="rgba(127,167,194,.32)" stroke="rgba(127,167,194,.55)"/>
+                <path d="M18 100l72-12-10 12 10 12z" fill="rgba(127,167,194,.32)" stroke="rgba(127,167,194,.55)"/>
+                <path d="M182 100l-72-12 10 12-10 12z" fill="rgba(224,189,135,.48)" stroke="rgba(224,189,135,.7)"/>
+                <circle cx="100" cy="100" r="9" fill="#092130" stroke="rgba(224,189,135,.7)"/>
+              </svg>
+            </div>
+            <div class="timer-head">
+              <div><strong id="timerHabitName">Smoking</strong><br><span>Live charter timer</span></div>
+              <span id="timerMode">STOP</span>
+            </div>
+            <div class="big-timer" id="quitTimer">00d 00:00:00</div>
+            <div class="timer-units"><span>Days</span><span>Hours</span><span>Minutes</span><span>Seconds</span></div>
+            <div class="timer-foot">
+              <small id="timerSince">Started —</small>
+              <button id="editActiveBtn" type="button">Edit charter</button>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric"><span>Events avoided</span><strong id="avoidedMetric">0</strong><small id="avoidedSub">Based on your daily baseline</small></div>
+            <div class="metric"><span>Money retained</span><strong id="moneyMetric">0 SEK</strong><small>Estimated from your daily cost</small></div>
+            <div class="metric"><span>Time recovered</span><strong id="timeMetric">0 h</strong><small>Estimated time returned to you</small></div>
+            <div class="metric"><span>Closed moments</span><strong id="closedMetric">0</strong><small>Logged high-risk moments resolved</small></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="moment" aria-labelledby="momentTitle">
+    <div class="wrap">
+      <div class="section-head">
+        <div><div class="kicker">Right now · quick intervention</div><h2 id="momentTitle">Make the next five minutes easier.</h2></div>
+        <p>No jargon required. Describe the moment, set how strong the urge feels, and HUM-OS will route you to a small action instead of a lecture.</p>
+      </div>
+
+      <div class="two">
+        <div class="panel panel-pad">
+          <label class="label" for="momentText">What is happening?</label>
+          <textarea class="field" id="momentText" enterkeyhint="done" autocapitalize="sentences" placeholder="Example: I am stressed after work and I want to buy something I do not need."></textarea>
+
+          <div class="intensity-wrap">
+            <label class="label" for="intensity">How strong is the urge?</label>
+            <div class="range-row">
+              <input id="intensity" type="range" min="1" max="10" value="5">
+              <div class="range-value" id="intensityValue">5/10</div>
+            </div>
+          </div>
+
+          <div class="actionrow">
+            <button class="btn primary" id="routeMomentBtn" type="button">Get next action</button>
+            <button class="btn" id="clearMomentBtn" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div class="panel panel-pad">
+          <div class="kicker">Current signal</div>
+          <div class="state-grid">
+            <div class="state"><span>Trigger</span><strong id="stateTrigger">Unspecified</strong></div>
+            <div class="state"><span>Intensity</span><strong id="stateIntensity">5 / 10</strong></div>
+            <div class="state"><span>Route</span><strong id="stateRoute">GATE</strong></div>
+            <div class="state"><span>Exit</span><strong id="stateExit">Open</strong></div>
+          </div>
+
+          <div class="routebox" id="routeResult" tabindex="-1" aria-live="polite">
+            <div class="route-title">
+              <b id="routeTitle">Reduce the immediate load</b>
+              <span id="routeCode">GATE · READY</span>
+            </div>
+            <div class="route-trigger" id="routeTriggerBadge">Trigger · Unspecified</div>
+            <p id="routeText">Choose a trigger or describe the moment. HUM-OS will reduce the immediate load with one bounded next action.</p>
+            <div class="route-actions">
+              <button class="primary" id="startCalmFromRoute" type="button">Start 5-minute calm</button>
+              <button id="logResolvedBtn" type="button">Mark resolved</button>
+              <button id="needSupportBtn" type="button">I need support</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="plan">
+    <div class="wrap">
+      <div class="section-head">
+        <div><div class="kicker">02 · Plan <span class="muted">/ Authorize</span></div><h2>Your active habit charters.</h2></div>
+        <p>Each habit gets its own rules, starting point and baseline. STOP, REDUCE, BOUND or REPLACE — the product adapts to the goal instead of forcing every user into one model.</p>
+      </div>
+
+      <div class="habit-grid" id="habitGrid"></div>
+
+      <div class="two" style="margin-top:16px">
+        <div class="panel charter-preview" id="charterPreview"></div>
+        <div class="panel panel-pad">
+          <div class="kicker">Why a charter?</div>
+          <h3 style="margin-top:8px">Make the decision before the difficult moment arrives.</h3>
+          <p class="muted" style="margin-top:10px;line-height:1.6;font-size:13px">A charter is simply a compact plan: what behavior you are changing, what success means, which triggers matter, and what you do instead. The complex runtime stays behind the interface.</p>
+          <div class="actionrow">
+            <button class="btn primary" id="addHabitBtn" type="button">+ Add another habit</button>
+            <button class="btn" id="editHabitBtn" type="button">Edit selected</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="patterns">
+    <div class="wrap">
+      <div class="section-head">
+        <div><div class="kicker">03 · Patterns <span class="muted">/ Structure</span></div><h2>See what keeps the habit alive.</h2></div>
+        <p>HUM-OS turns scattered moments into a behavioral map. A streak tells you how long. A pattern tells you why — and that is where prevention becomes practical.</p>
+      </div>
+
+      <div class="four" id="patternGrid">
+        <div class="pattern"><div class="pct">38%</div><div class="name">Routine cue</div><p>Repeated context: same time, same place, same automatic sequence.</p><div class="bar"><i style="width:38%"></i></div></div>
+        <div class="pattern"><div class="pct">27%</div><div class="name">Stress release</div><p>The habit appears as a fast escape from pressure, tension or decision fatigue.</p><div class="bar"><i style="width:27%"></i></div></div>
+        <div class="pattern"><div class="pct">18%</div><div class="name">Environment</div><p>People, rooms, routes, devices or objects reactivate an old behavior script.</p><div class="bar"><i style="width:18%"></i></div></div>
+        <div class="pattern"><div class="pct">11%</div><div class="name">Social cue</div><p>Other people or shared rituals make the old behavior feel normal again.</p><div class="bar"><i style="width:11%"></i></div></div>
+      </div>
+
+      <div class="panel panel-pad" style="margin-top:12px">
+        <div class="kicker">Relationship view</div>
+        <p class="muted" style="margin-top:8px;line-height:1.65;font-size:13px"><strong style="color:#d8e1e6">Trigger → automatic script → behavior → short reward → reinforced dependency.</strong> HUM-OS interrupts this chain at the earliest practical point. The product does not need to shame the user; it needs to make the relationship legible.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="progress">
+    <div class="wrap">
+      <div class="section-head">
+        <div><div class="kicker">04 · Progress <span class="muted">/ Record</span></div><h2>Evidence, not motivational noise.</h2></div>
+        <p>Keep the good gamification, but ground it in useful evidence: avoided events, retained money, recovered time, resolved moments and intervention history.</p>
+      </div>
+
+      <div class="progress-metrics">
+        <div class="progress-card"><span>Live duration</span><strong id="progressDuration">0d</strong><small>Current selected charter</small></div>
+        <div class="progress-card"><span>Avoided</span><strong id="progressAvoided">0</strong><small>Estimated behavior events</small></div>
+        <div class="progress-card"><span>Retained</span><strong id="progressMoney">0 SEK</strong><small>Estimated financial effect</small></div>
+        <div class="progress-card"><span>Resolved moments</span><strong id="progressClosed">0</strong><small>Explicitly logged closures</small></div>
+      </div>
+
+      <div class="two" style="margin-top:14px">
+        <div class="panel panel-pad">
+          <div class="kicker">Recent event log</div>
+          <div class="loglist" id="eventLog"></div>
+        </div>
+        <div class="panel panel-pad">
+          <div class="kicker">What is working</div>
+          <div class="loglist">
+            <div class="logitem"><div class="loghead"><span>Delay</span><span>Low friction</span></div><p>Interrupting the first automatic movement gives the user enough time to choose another route.</p></div>
+            <div class="logitem"><div class="loghead"><span>Move</span><span>Context reset</span></div><p>Changing location is useful when the environment itself is part of the trigger chain.</p></div>
+            <div class="logitem"><div class="loghead"><span>Signal</span><span>Human bridge</span></div><p>Buddy or professional support becomes a bridge when self-routing is no longer enough.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="support">
+    <div class="wrap">
+      <div class="section-head">
+        <div><div class="kicker">05 · Support <span class="muted">/ N.O.I.S.E. Harbour</span></div><h2>Bring in support without losing control.</h2></div>
+        <p>The Harbour is secondary by design. It connects the user to useful resources when needed, while the core runtime stays clear and personal.</p>
+      </div>
+
+      <div class="three">
+        <article class="port"><small>Port 01</small><h3>Calm</h3><p>A five-minute delay and breathing surface for acute cravings, impulses or anxiety-heavy moments.</p><button class="btn" id="harbourCalmBtn" type="button">Open calm timer</button></article>
+        <article class="port"><small>Port 02</small><h3>Signal</h3><p>Prepare a short support message the user can copy manually into their preferred messaging app.</p><button class="btn" id="signalBtn" type="button">Prepare signal</button></article>
+        <article class="port"><small>Port 03</small><h3>Move</h3><p>Break a location-bound pattern with a short walk, room change or physical context reset.</p><button class="btn" id="moveBtn" type="button">Route to move</button></article>
+        <article class="port"><small>Port 04</small><h3>Learn</h3><p>Explain why a trigger works and how repetition turns a context into an automatic behavioral script.</p><button class="btn" id="learnBtn" type="button">Show explanation</button></article>
+        <article class="port"><small>Port 05</small><h3>Expert</h3><p>Some behaviors may require professional guidance, especially where withdrawal, medication or acute health risk is involved.</p><button class="btn" id="expertBtn" type="button">Safety boundary</button></article>
+        <article class="port"><small>Port 06</small><h3>AI Mirror</h3><p>Summarize patterns and reflect evidence back to the user — advisory only, never an authority over the person.</p><button class="btn" id="aiBtn" type="button">Generate local summary</button></article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="premium-footer">
+  <div class="footer-current" aria-hidden="true">
+    <svg viewBox="0 0 1200 170" preserveAspectRatio="none">
+      <path d="M-80 52 C120 6 282 104 476 56 S840 8 1280 60" stroke="rgba(224,189,135,.68)"/>
+      <path d="M-60 96 C160 38 326 142 566 88 S930 42 1270 94" stroke="rgba(127,167,194,.68)"/>
+      <path d="M-40 136 C180 92 356 166 640 126 S1000 88 1250 132" stroke="rgba(224,189,135,.36)"/>
+    </svg>
+  </div>
+
+  <div class="wrap footer-shell">
+    <div class="footer-emblem" aria-hidden="true">
+      <span class="footer-emblem-ring"></span>
+      <span class="footer-emblem-cross vertical"></span>
+      <span class="footer-emblem-cross horizontal"></span>
+      <span class="footer-emblem-core"></span>
+    </div>
+
+    <div class="footer-identity">
+      <strong>HUM-OS</strong>
+      <span>Personal Behavior Navigation</span>
+      <small>Running on ARK-OS · N.O.I.S.E. Harbour interaction surface</small>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-governance">
+      <span>Human judgment remains authoritative.</span>
+      <span>Reality remains the acceptance test.</span>
+      <span>Local-first runtime · No account required for this build.</span>
+    </div>
+
+    <div class="footer-meta">
+      <span>© <span id="copyrightYear">2026</span> HUM-OS. All rights reserved.</span>
+      <span>Build · Native Fusion v5.7</span>
+      <span>Personal data in this prototype is stored locally in this browser.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="actiondock collapsed" id="actionDock" aria-label="Quick actions">
+  <div class="dockgrid">
+    <button class="dockbtn" id="dockCalm" type="button" title="Calm"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h10.5c2.6 0 2.6-4 0-4-1.2 0-2.1.5-2.6 1.4M3 12h15c3.2 0 3.2 5 0 5-1.3 0-2.4-.6-3-1.6M3 16h7"/></svg><span>Calm</span></button>
+    <button class="dockbtn" id="dockSignal" type="button" title="Signal"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg><span>Signal</span></button>
+    <div class="dock-center"><button class="scrolltop" id="scrollTopBtn" type="button" aria-label="Scroll to top — 0% through page" title="Back to top">
+  <span class="scrolltop-inner">
+    <span class="scrolltop-percent" id="scrollTopPercent">0%</span>
+    <svg class="scrolltop-arrow" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6.5 13.5 12 8l5.5 5.5"/>
+      <path d="M6.5 18 12 12.5 17.5 18"/>
+    </svg>
+  </span>
+</button></div>
+    <button class="dockbtn" id="dockRoute" type="button" title="Route"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h3c4 0 2-8 6-10M6 16V9c0-2 1-3 3-3h7"/></svg><span>Route</span></button>
+    <button class="dockbtn" id="dockLog" type="button" title="Log"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v3H7zM6 6H5v15h14V6h-1M8 12l2 2 4-4M8 18h8"/></svg><span>Log</span></button>
+  </div>
+</div>
+
+
+
+<div class="scrollspy-indicator" id="scrollSpyIndicator" aria-hidden="true">
+  <strong id="scrollSpySection">TODAY</strong>&nbsp;·&nbsp;<span id="scrollSpyText">0%</span>
+</div>
+
+<!-- Habit modal -->
+<div class="modalbackdrop" id="habitModal" role="dialog" aria-modal="true" aria-labelledby="habitModalTitle">
+  <div class="modal">
+    <div class="modalhead">
+      <h3 id="habitModalTitle">Create habit charter</h3>
+      <button class="closebtn" id="closeHabitModal" type="button" aria-label="Close">×</button>
+    </div>
+    <form class="modalbody" id="habitForm">
+      <input type="hidden" id="habitId">
+      <div class="formgrid">
+        <div>
+          <label class="label" for="habitName">Behavior / habit</label>
+          <input class="field" id="habitName" required maxlength="40" placeholder="Smoking">
+        </div>
+        <div>
+          <label class="label" for="habitMode">Goal mode</label>
+          <select class="field" id="habitMode">
+            <option>STOP</option><option>REDUCE</option><option>BOUND</option><option>REPLACE</option>
+          </select>
+        </div>
+        <div>
+          <label class="label" for="habitStart">Start date & time</label>
+          <input class="field" id="habitStart" type="datetime-local" required>
+        </div>
+        <div>
+          <label class="label" for="habitDailyCount">Daily baseline count</label>
+          <input class="field" id="habitDailyCount" type="number" min="0" max="1000" step="1" value="20">
+        </div>
+        <div>
+          <label class="label" for="habitDailyCost">Daily cost (SEK)</label>
+          <input class="field" id="habitDailyCost" type="number" min="0" max="100000" step="0.01" value="77">
+        </div>
+        <div>
+          <label class="label" for="habitDailyMinutes">Time used per day (min)</label>
+          <input class="field" id="habitDailyMinutes" type="number" min="0" max="1440" step="1" value="120">
+        </div>
+        <div class="full">
+          <label class="label" for="habitObjective">Objective</label>
+          <textarea class="field" id="habitObjective" maxlength="300" placeholder="What does success mean?"></textarea>
+        </div>
+        <div class="full">
+          <label class="label" for="habitTriggers">Known triggers</label>
+          <textarea class="field" id="habitTriggers" maxlength="300" placeholder="Coffee · stress · driving · social"></textarea>
+        </div>
+        <div class="full">
+          <label class="label" for="habitReplacement">Replacement / support path</label>
+          <textarea class="field" id="habitReplacement" maxlength="300" placeholder="Water · walk · breathing · buddy"></textarea>
+        </div>
+      </div>
+      <div class="actionrow">
+        <button class="btn primary" type="submit">Save charter</button>
+        <button class="btn danger" id="deleteHabitBtn" type="button">Delete</button>
+      </div>
+      <p class="helper" style="margin-top:12px">This prototype stores your demo data only in this browser using localStorage.</p>
+    </form>
+  </div>
+</div>
+
+<!-- Calm modal -->
+<div class="modalbackdrop" id="calmModal" role="dialog" aria-modal="true" aria-labelledby="calmTitle">
+  <div class="modal">
+    <div class="modalhead">
+      <h3 id="calmTitle">5-minute calm passage</h3>
+      <button class="closebtn" id="closeCalmModal" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="modalbody">
+      <div class="calm-ring">
+        <svg viewBox="0 0 210 210" aria-hidden="true">
+          <circle class="track" cx="105" cy="105" r="90"></circle>
+          <circle class="progress" id="calmProgress" cx="105" cy="105" r="90"></circle>
+        </svg>
+        <div class="breath-orb" id="breathOrb" data-phase="inhale" aria-hidden="true">
+          <div class="calm-time" id="calmTime">05:00</div>
+        </div>
+      </div>
+      <div class="breath-phase" id="breathPhase">Breathe in</div>
+      <div class="breath-instruction" id="breathInstruction">Inhale gently through your nose for 4 seconds.</div>
+      <div class="breath-cycle" aria-label="Breathing cycle">
+        <span id="phaseInhale" class="active">Inhale · 4s</span>
+        <span id="phaseHold">Hold · 4s</span>
+        <span id="phaseExhale">Exhale · 4s</span>
+      </div>
+      <p class="calm-caption" id="calmCaption">Follow the expanding and shrinking current. If this breathing pattern feels uncomfortable, pause and breathe normally.</p>
+      <div class="actionrow" style="justify-content:center">
+        <button class="btn primary" id="calmStartBtn" type="button">Start</button>
+        <button class="btn" id="calmPauseBtn" type="button">Pause</button>
+        <button class="btn" id="calmResetBtn" type="button">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Generic info modal -->
+<div class="modalbackdrop" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="modal">
+    <div class="modalhead">
+      <h3 id="infoTitle">Support</h3>
+      <button class="closebtn" id="closeInfoModal" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="modalbody">
+      <div id="infoContent" style="color:#b8c6ce;font-size:13px;line-height:1.65"></div>
+      <div class="actionrow"><button class="btn primary" id="infoDoneBtn" type="button">Done</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(()=>{
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const STORE='humos_v1_state';
+  const LEGACY_STORE='humanno_v1_state';
+  const LEGACY_STORE_PREV='humtrail_v1_state';
+  const LEGACY_STORE_PREV2='humantra_v1_state';
+  const LEGACY_STORE_PREV3='navira_v1_state';
+  const LEGACY_STORE_2='helmex_v3_state';
+  const LEGACY_STORE_3='quit_runtime_v2_state';
+  const MAX_LOGS=30;
+  let calmTimer=null;
+  let calmRemaining=300;
+  let calmRunning=false;
+  let breathPhaseElapsed=0;
+  const BREATH_PHASE_SECONDS=4;
+  const BREATH_PHASES=[
+    {key:'inhale',label:'Breathe in',instruction:'Inhale gently through your nose for 4 seconds.'},
+    {key:'hold',label:'Hold',instruction:'Hold your breath gently for 4 seconds.'},
+    {key:'exhale',label:'Breathe out',instruction:'Exhale slowly through your mouth for 4 seconds.'}
+  ];
+  let toastTimer=null;
+
+  function uid(){return 'h_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
+  function clamp(n,min,max){n=Number(n);return Number.isFinite(n)?Math.min(max,Math.max(min,n)):min}
+  function pad(n){return String(Math.max(0,Math.floor(n))).padStart(2,'0')}
+  function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+  function toLocalInputValue(date){
+    const d=new Date(date), off=d.getTimezoneOffset();
+    return new Date(d.getTime()-off*60000).toISOString().slice(0,16);
+  }
+  function formatDateTime(ts){
+    const d=new Date(ts);
+    return Number.isNaN(d.getTime())?'Not defined':d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'});
+  }
+  function daysSince(ts){
+    const ms=Date.now()-new Date(ts).getTime();
+    return Math.max(0,ms/86400000);
+  }
+  function defaultState(){
+    const now=Date.now();
+    return {
+      activeId:'smoking',
+      selectedTrigger:'',
+      closedCount:0,
+      habits:[
+        {id:'smoking',name:'Smoking',mode:'STOP',start:new Date(now-14*86400000).toISOString(),dailyCount:20,dailyCost:77,dailyMinutes:120,objective:'Remain smoke-free and move through cravings without cigarettes.',triggers:'Coffee · stress · driving · social breaks',replacement:'Water · breathing · walk · buddy · structured delay'},
+        {id:'doom',name:'Doomscrolling',mode:'BOUND',start:new Date(now-4*86400000).toISOString(),dailyCount:1,dailyCost:0,dailyMinutes:150,objective:'Keep late-night social media outside the sleep window.',triggers:'Bed · boredom · notifications after 23:00',replacement:'Reading · audio · phone outside sleeping area'},
+        {id:'impulse',name:'Impulse Buying',mode:'BOUND',start:new Date(now-9*86400000).toISOString(),dailyCount:1,dailyCost:120,dailyMinutes:20,objective:'Apply a 24-hour delay before discretionary purchases.',triggers:'Ads · payday · late evening · boredom',replacement:'Wishlist · 24-hour hold · review budget'}
+      ],
+      logs:[
+        {time:new Date(now-2*3600000).toISOString(),habit:'Smoking',trigger:'Coffee',text:'Craving routed through delay + location change. Event closed without smoking.'},
+        {time:new Date(now-86400000).toISOString(),habit:'Doomscrolling',trigger:'Night',text:'Phone left outside the sleeping area. Replaced with reading.'}
+      ]
+    };
+  }
+  function load(){
+    try{
+      let raw=localStorage.getItem(STORE);
+      if(!raw) raw=localStorage.getItem(LEGACY_STORE);
+      if(!raw) raw=localStorage.getItem(LEGACY_STORE_PREV);
+      if(!raw) raw=localStorage.getItem(LEGACY_STORE_PREV2);
+      if(!raw) raw=localStorage.getItem(LEGACY_STORE_PREV3);
+      if(!raw) raw=localStorage.getItem(LEGACY_STORE_2);
+      if(!raw) raw=localStorage.getItem(LEGACY_STORE_3);
+      const s=JSON.parse(raw);
+      if(s&&Array.isArray(s.habits)&&s.habits.length) return s;
+    }catch(e){}
+    return defaultState();
+  }
+  let state=load();
+  function save(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
+  function activeHabit(){return state.habits.find(h=>h.id===state.activeId)||state.habits[0]}
+
+  function toast(msg){
+    const el=$('#toast');
+    el.textContent=msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>el.classList.remove('show'),2600);
+  }
+
+  function openModal(id){$(id).classList.add('open')}
+  function closeModal(id){$(id).classList.remove('open')}
+
+  function renderClock(){
+    const d=new Date();
+    $('#localClock').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    $('#localDate').textContent=d.toLocaleDateString([], {weekday:'short',day:'2-digit',month:'short'});
+  }
+
+  function elapsedParts(ts){
+    const diff=Math.max(0,Date.now()-new Date(ts).getTime());
+    const total=Math.floor(diff/1000);
+    return {
+      days:Math.floor(total/86400),
+      hours:Math.floor((total%86400)/3600),
+      mins:Math.floor((total%3600)/60),
+      secs:total%60
+    };
+  }
+
+  function derived(h){
+    const d=daysSince(h.start);
+    return {
+      days:d,
+      avoided:Math.floor(d*clamp(h.dailyCount,0,1000)),
+      money:d*clamp(h.dailyCost,0,100000),
+      minutes:d*clamp(h.dailyMinutes,0,1440)
+    };
+  }
+
+  function updateLive(){
+    const h=activeHabit();
+    if(!h)return;
+    const p=elapsedParts(h.start);
+    const d=derived(h);
+    $('#quitTimer').textContent=`${pad(p.days)}d ${pad(p.hours)}:${pad(p.mins)}:${pad(p.secs)}`;
+    $('#timerHabitName').textContent=h.name;
+    $('#timerMode').textContent=h.mode;
+    $('#timerSince').textContent='Started '+formatDateTime(h.start);
+    $('#activeHabitPill').textContent=h.name+' · '+h.mode;
+    $('#avoidedMetric').textContent=d.avoided.toLocaleString();
+    $('#moneyMetric').textContent=Math.round(d.money).toLocaleString()+' SEK';
+    const hours=d.minutes/60;
+    $('#timeMetric').textContent=hours>=24?(hours/24).toFixed(1)+' d':hours.toFixed(1)+' h';
+    const habitClosed=state.logs.filter(l=>l.habit===h.name&&/closed|resolved/i.test(l.text)).length;
+    $('#closedMetric').textContent=habitClosed.toLocaleString();
+    $('#progressDuration').textContent=p.days+'d '+pad(p.hours)+'h';
+    $('#progressAvoided').textContent=d.avoided.toLocaleString();
+    $('#progressMoney').textContent=Math.round(d.money).toLocaleString()+' SEK';
+    $('#progressClosed').textContent=habitClosed.toLocaleString();
+  }
+
+  function renderHabits(){
+    const grid=$('#habitGrid');
+    grid.innerHTML='';
+    state.habits.forEach((h,i)=>{
+      const d=derived(h);
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='habit-card'+(h.id===state.activeId?' active':'');
+      b.setAttribute('data-id',h.id);
+      b.innerHTML=`<div class="top"><span class="code">${String(i+1).padStart(2,'0')} · Charter</span><span class="mode">${escapeHTML(h.mode)}</span></div>
+        <h3>${escapeHTML(h.name)}</h3>
+        <p>${Math.floor(d.days)} days active · ${d.avoided.toLocaleString()} estimated events avoided</p>
+        <span class="selectmark">◌</span>`;
+      b.addEventListener('click',()=>{state.activeId=h.id;save();renderAll();toast(h.name+' selected')});
+      grid.appendChild(b);
+    });
+    renderCharterPreview();
+  }
+
+  function renderCharterPreview(){
+    const h=activeHabit();
+    const p=$('#charterPreview');
+    p.innerHTML=`<div class="kicker">Selected charter</div>
+      <div class="kv"><span>Behavior</span><strong>${escapeHTML(h.name)}</strong></div>
+      <div class="kv"><span>Mode</span><strong>${escapeHTML(h.mode)}</strong></div>
+      <div class="kv"><span>Started</span><strong>${escapeHTML(formatDateTime(h.start))}</strong></div>
+      <div class="kv"><span>Objective</span><strong>${escapeHTML(h.objective||'Not defined')}</strong></div>
+      <div class="kv"><span>Known triggers</span><strong>${escapeHTML(h.triggers||'Not defined')}</strong></div>
+      <div class="kv"><span>Replacement</span><strong>${escapeHTML(h.replacement||'Not defined')}</strong></div>`;
+  }
+
+  function renderLogs(){
+    const box=$('#eventLog');
+    if(!state.logs.length){box.innerHTML='<div class="logitem"><p>No events logged yet. Route a difficult moment and mark it resolved.</p></div>';return}
+    box.innerHTML=state.logs.slice(0,8).map(l=>`<div class="logitem">
+      <div class="loghead"><span>${escapeHTML(new Date(l.time).toLocaleString([], {dateStyle:'medium',timeStyle:'short'}))}</span><span>${escapeHTML(l.habit)} · ${escapeHTML(l.trigger||'Moment')}</span></div>
+      <p>${escapeHTML(l.text)}</p></div>`).join('');
+  }
+
+  function renderAll(){renderHabits();renderLogs();updateLive()}
+
+  const triggerRoutes={
+    Coffee:{
+      code:'BRIDGE · COFFEE',
+      route:'BRIDGE',
+      action:'Break the cue-pairing now. Keep the coffee if you want, but change location, drink a glass of water first, and delay the old behavior for five minutes. The objective is to separate coffee from the automatic habit.'
+    },
+    Stress:{
+      code:'BRIDGE · STRESS',
+      route:'BRIDGE',
+      action:'Lower physiological load before making a decision. Step away from the trigger, start the 5-minute calm passage, loosen your shoulders, and reassess only after the first stress wave drops.'
+    },
+    Boredom:{
+      code:'PASSAGE · BOREDOM',
+      route:'PASSAGE',
+      action:'Give the empty space a concrete job. Pick one ten-minute replacement now — walk, tidy one small area, stretch, make tea, read, or finish one tiny task. Structure removes the opening the habit normally fills.'
+    },
+    Social:{
+      code:'BRIDGE · SOCIAL',
+      route:'BRIDGE',
+      action:'Keep the people; change the ritual. Move position, hold a neutral replacement such as water, and stay in the conversation without executing the old behavior. Social connection does not require the habit.'
+    },
+    Night:{
+      code:'GATE · NIGHT',
+      route:'GATE',
+      action:'Protect the late-hour boundary. Lower stimulation, move the trigger or device out of immediate reach, dim the environment, and enter your preselected night routine for ten minutes before reassessing.'
+    },
+    Phone:{
+      code:'GATE · PHONE',
+      route:'GATE',
+      action:'Change the physical control surface first. Lock the triggering app, put the phone outside arm’s reach, stand up, and begin a different physical task for ten minutes. Make the automatic route inconvenient.'
+    },
+    Impulse:{
+      code:'GATE · IMPULSE',
+      route:'GATE',
+      action:'Insert time between urge and execution. Save the decision instead of completing it, write one sentence explaining what you want to do, and apply a delay window before you are allowed to reconsider.'
+    }
+  };
+
+  function routeFor(text,intensity,trigger){
+    const t=(text+' '+trigger).toLowerCase();
+    const n=clamp(intensity,1,10);
+    const inferred=inferTrigger(text);
+    const resolvedTrigger=trigger||inferred||'';
+    const selected=triggerRoutes[resolvedTrigger]||null;
+
+    let title='Reduce the immediate load';
+    let code=selected?.code || 'GATE · READY';
+    let route=selected?.route || 'GATE';
+    let action=selected?.action || 'Create a short decision gap. Change position, name what is pulling you toward the behavior, and choose what the next five minutes should look like before doing anything automatic.';
+
+    if(/alcohol|withdrawal|medication|drug/.test(t)){
+      title='Use a safety boundary';
+      code='HOLD → EXPERT';
+      route='HOLD';
+      action='Some forms of withdrawal or medication change can require professional guidance. Do not use this prototype as a substitute for medical withdrawal planning; use appropriate clinical support.';
+    }else if(n>=8){
+      code='BRIDGE · HIGH · '+(resolvedTrigger||'MOMENT').toUpperCase();
+      route='BRIDGE';
+      action='Intensity is high. First change location and remove immediate access to the behavior. Then: '+action;
+    }
+
+    return {title,code,route,action,trigger:resolvedTrigger}
+  }
+
+  function runRoute(options={}){
+    const {focusResult=true,requireContext=false}=options;
+    let momentText=$('#momentText').value.trim();
+    let runtimeText=$('#runtimeInput').value.trim();
+    let text=momentText||runtimeText;
+
+    if(!text && state.selectedTrigger){
+      text=(triggerPrompt && triggerPrompt[state.selectedTrigger]) || `${state.selectedTrigger} is triggering the habit right now.`;
+      $('#momentText').value=text;
+      $('#runtimeInput').value=text;
+    }
+
+    if(!text && requireContext){
+      toast('Describe the moment or choose a trigger first');
+      scrollToSection('#today','#runtimeInput',false);
+      return false;
+    }
+
+    if(!text){
+      text='A difficult moment is happening right now.';
+      $('#momentText').value=text;
+    }
+
+    if(!momentText) $('#momentText').value=text;
+    if(!runtimeText) $('#runtimeInput').value=text;
+
+    const intensity=clamp($('#intensity').value,1,10);
+    const inferred=inferTrigger(text);
+    const trigger=state.selectedTrigger||inferred;
+
+    if(trigger){
+      state.selectedTrigger=trigger;
+      save();
+      selectTriggerButton(trigger);
+    }
+
+    const r=routeFor(text,intensity,trigger);
+    $('#stateTrigger').textContent=trigger||'Unspecified';
+    $('#stateIntensity').textContent=intensity+' / 10';
+    $('#stateRoute').textContent=r.route;
+    $('#stateExit').textContent='Open';
+    $('#routeTitle').textContent=r.title;
+    $('#routeCode').textContent=r.code;
+    $('#routeText').textContent=r.action;
+    $('#routeTriggerBadge').textContent='Trigger · '+(r.trigger||trigger||'Unspecified');
+    $('#signalPill').textContent=intensity>=8?'High':intensity>=5?'Attention':'Stable';
+    $('#signalChip').style.borderColor=intensity>=8?'rgba(200,121,114,.5)':intensity>=5?'rgba(209,174,105,.5)':'rgba(142,182,154,.4)';
+
+    if(focusResult) focusRouteResult();
+    return true;
+  }
+
+  function inferTrigger(text){
+    const t=(text||'').toLowerCase();
+    const rules=[['Coffee','coffee'],['Stress','stress'],['Boredom','bored'],['Social','social'],['Night','night bed sleep'],['Phone','phone scroll doom'],['Impulse','buy purchase cart shopping']];
+    for(const [name,words] of rules){if(words.split(' ').some(w=>t.includes(w)))return name}
+    return '';
+  }
+
+  function logResolved(options={}){
+    const {navigate=false}=options;
+    const h=activeHabit();
+    const trigger=state.selectedTrigger||$('#stateTrigger').textContent||'Moment';
+    const detail=$('#momentText').value.trim()||$('#runtimeInput').value.trim()||'High-risk moment';
+    state.logs.unshift({
+      time:new Date().toISOString(),
+      habit:h.name,
+      trigger,
+      text:`Resolved / closed. ${detail}`
+    });
+    state.logs=state.logs.slice(0,MAX_LOGS);
+    save();
+    renderAll();
+    $('#stateExit').textContent='Closed';
+    toast('Moment recorded as resolved');
+
+    if(navigate){
+      window.setTimeout(()=>{
+        const first=$('#eventLog .logitem');
+        if(first){
+          first.setAttribute('tabindex','-1');
+          first.classList.add('log-focus');
+          scrollToSection('#progress',first,false);
+          window.setTimeout(()=>first.classList.remove('log-focus'),1800);
+        }else{
+          scrollToSection('#progress');
+        }
+      },30);
+    }
+    return true;
+  }
+
+  function openHabitEditor(h){
+    const edit=!!h;
+    $('#habitModalTitle').textContent=edit?'Edit habit charter':'Create habit charter';
+    $('#habitId').value=h?.id||'';
+    $('#habitName').value=h?.name||'';
+    $('#habitMode').value=h?.mode||'STOP';
+    $('#habitStart').value=toLocalInputValue(h?.start||new Date());
+    $('#habitDailyCount').value=h?.dailyCount??1;
+    $('#habitDailyCost').value=h?.dailyCost??0;
+    $('#habitDailyMinutes').value=h?.dailyMinutes??30;
+    $('#habitObjective').value=h?.objective||'';
+    $('#habitTriggers').value=h?.triggers||'';
+    $('#habitReplacement').value=h?.replacement||'';
+    $('#deleteHabitBtn').style.display=edit?'inline-flex':'none';
+    openModal('#habitModal');
+    setTimeout(()=>$('#habitName').focus(),80);
+  }
+
+  function saveHabit(e){
+    e.preventDefault();
+    const id=$('#habitId').value||uid();
+    const name=$('#habitName').value.trim();
+    if(!name){toast('Name the habit first');return}
+    const startRaw=$('#habitStart').value;
+    const start=new Date(startRaw);
+    if(Number.isNaN(start.getTime())){toast('Choose a valid start date');return}
+    const data={
+      id,name,
+      mode:$('#habitMode').value,
+      start:start.toISOString(),
+      dailyCount:clamp($('#habitDailyCount').value,0,1000),
+      dailyCost:clamp($('#habitDailyCost').value,0,100000),
+      dailyMinutes:clamp($('#habitDailyMinutes').value,0,1440),
+      objective:$('#habitObjective').value.trim(),
+      triggers:$('#habitTriggers').value.trim(),
+      replacement:$('#habitReplacement').value.trim()
+    };
+    const ix=state.habits.findIndex(h=>h.id===id);
+    if(ix>=0)state.habits[ix]=data;else state.habits.push(data);
+    state.activeId=id;
+    save();closeModal('#habitModal');renderAll();toast('Charter saved');
+  }
+
+  function deleteHabit(){
+    if(state.habits.length<=1){toast('Keep at least one habit charter');return}
+    const id=$('#habitId').value;
+    state.habits=state.habits.filter(h=>h.id!==id);
+    state.activeId=state.habits[0].id;
+    save();closeModal('#habitModal');renderAll();toast('Charter deleted');
+  }
+
+  function showInfo(title,html){
+    $('#infoTitle').textContent=title;
+    $('#infoContent').innerHTML=html;
+    openModal('#infoModal');
+  }
+
+  function startCalm(){
+    openModal('#calmModal');
+    if(calmRemaining<=0)calmReset();
+    updateCalm();
+  }
+
+  function currentBreathPhase(){
+    const index=Math.floor(breathPhaseElapsed/BREATH_PHASE_SECONDS)%BREATH_PHASES.length;
+    return {index,...BREATH_PHASES[index]};
+  }
+
+  function updateBreathVisual(){
+    const phase=currentBreathPhase();
+    const orb=$('#breathOrb');
+    orb.setAttribute('data-phase',phase.key);
+    $('#breathPhase').textContent=phase.label;
+    $('#breathInstruction').textContent=phase.instruction;
+    ['#phaseInhale','#phaseHold','#phaseExhale'].forEach((id,i)=>$(id).classList.toggle('active',i===phase.index));
+  }
+
+  function updateCalm(){
+    const m=Math.floor(calmRemaining/60),sec=calmRemaining%60;
+    $('#calmTime').textContent=pad(m)+':'+pad(sec);
+    const circ=565.49;
+    $('#calmProgress').style.strokeDashoffset=String(circ*(1-calmRemaining/300));
+    updateBreathVisual();
+    $('#calmCaption').textContent=calmRemaining===0
+      ?'Passage complete. Reassess the urge. If intensity is lower, close the event. If not, change the route or add human support.'
+      :'Follow the expanding and shrinking current. If this breathing pattern feels uncomfortable, pause and breathe normally.';
+  }
+
+  function calmStart(){
+    if(calmRunning||calmRemaining<=0)return;
+    calmRunning=true;
+    const orb=$('#breathOrb');
+    orb.style.animationPlayState='running';
+    updateBreathVisual();
+    calmTimer=setInterval(()=>{
+      calmRemaining=Math.max(0,calmRemaining-1);
+      breathPhaseElapsed=(breathPhaseElapsed+1)%12;
+      updateCalm();
+      if(calmRemaining===0){
+        clearInterval(calmTimer);calmTimer=null;calmRunning=false;
+        $('#breathOrb').style.animationPlayState='paused';
+        toast('Calm passage complete');
+      }
+    },1000);
+  }
+
+  function calmPause(){
+    if(calmTimer){clearInterval(calmTimer);calmTimer=null}
+    calmRunning=false;
+    $('#breathOrb').style.animationPlayState='paused';
+  }
+
+  function calmReset(){
+    calmPause();
+    calmRemaining=300;
+    breathPhaseElapsed=0;
+    const orb=$('#breathOrb');
+    orb.style.animation='none';
+    void orb.offsetWidth;
+    orb.style.animation='breathCurrent 12s ease-in-out infinite';
+    orb.style.animationPlayState='paused';
+    updateCalm();
+  }
+
+  let humosNavigationTimer=0;
+  let humosScrollRAF=0;
+  let humosAutoScrolling=false;
+
+  function editableElement(el){
+    return !!(el && (el.matches?.('input,textarea,select,[contenteditable="true"]')));
+  }
+
+  function cancelAutoScroll(){
+    clearTimeout(humosNavigationTimer);
+    if(humosScrollRAF){
+      cancelAnimationFrame(humosScrollRAF);
+      humosScrollRAF=0;
+    }
+    humosAutoScrolling=false;
+    document.documentElement.classList.remove('humos-transition');
+    $('#scrollTopBtn')?.classList.remove('scrolling');
+  }
+
+  function dismissKeyboard(){
+    const active=document.activeElement;
+    if(editableElement(active)){
+      try{active.blur()}catch(e){}
+      return true;
+    }
+    return false;
+  }
+
+  function afterViewportSettles(callback){
+    const vv=window.visualViewport;
+    if(!vv){
+      requestAnimationFrame(()=>requestAnimationFrame(callback));
+      return;
+    }
+
+    let previous=vv.height;
+    let stableFrames=0;
+    const started=performance.now();
+
+    function check(){
+      const current=vv.height;
+      if(Math.abs(current-previous)<1)stableFrames++;
+      else stableFrames=0;
+      previous=current;
+
+      if(stableFrames>=3 || performance.now()-started>360){
+        callback();
+      }else{
+        requestAnimationFrame(check);
+      }
+    }
+    requestAnimationFrame(check);
+  }
+
+  function finishSectionNavigation(focusTarget,updateHash,el){
+    humosAutoScrolling=false;
+    humosScrollRAF=0;
+    document.documentElement.classList.remove('humos-transition');
+
+    if(updateHash && el?.id){
+      try{history.replaceState(null,'','#'+el.id)}catch(e){}
+    }
+
+    if(focusTarget){
+      const focusEl=typeof focusTarget==='string'?document.querySelector(focusTarget):focusTarget;
+      if(focusEl){
+        try{focusEl.focus({preventScroll:true})}catch(e){focusEl.focus()}
+      }
+    }
+  }
+
+  function animateDocumentScroll(targetY,onDone){
+    cancelAutoScroll();
+
+    const startY=window.scrollY||window.pageYOffset||0;
+    const maxY=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+    const destination=Math.max(0,Math.min(Math.round(targetY),maxY));
+    const delta=destination-startY;
+    const distance=Math.abs(delta);
+    const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if(reduced || distance<4){
+      window.scrollTo(0,destination);
+      if(onDone)onDone();
+      return;
+    }
+
+    // Always visibly smooth, but fast enough to feel native.
+    // Long jumps never turn into slow "page tours".
+    const duration=Math.min(720,Math.max(300,300+Math.sqrt(distance)*8.5));
+    const started=performance.now();
+
+    humosAutoScrolling=true;
+    document.documentElement.classList.add('humos-transition');
+    $('#scrollTopBtn')?.classList.add('scrolling');
+
+    function frame(now){
+      if(!humosAutoScrolling)return;
+
+      const t=Math.min(1,(now-started)/duration);
+      // Quintic ease-in/out: deliberate launch, fast transit, soft landing.
+      const eased=t<.5
+        ?16*t*t*t*t*t
+        :1-Math.pow(-2*t+2,5)/2;
+
+      window.scrollTo(0,Math.round(startY+delta*eased));
+
+      if(t<1){
+        humosScrollRAF=requestAnimationFrame(frame);
+      }else{
+        window.scrollTo(0,destination);
+        humosAutoScrolling=false;
+        humosScrollRAF=0;
+        $('#scrollTopBtn')?.classList.remove('scrolling');
+        updateScrollIndicator();
+        if(destination<72)setDockVisible(false);
+        else if(destination<startY)setDockVisible(true);
+        else if(destination>startY && destination>140)setDockVisible(false);
+        if(onDone)onDone();
+      }
+    }
+
+    humosScrollRAF=requestAnimationFrame(frame);
+  }
+
+  function scrollToSection(target,focusTarget=null,updateHash=false){
+    const el=typeof target==='string'?document.querySelector(target):target;
+    if(!el)return false;
+
+    const perform=()=>{
+      const header=document.querySelector('.topbar');
+      const headerH=header?header.getBoundingClientRect().height:0;
+      const currentY=window.scrollY||window.pageYOffset||0;
+      const targetY=Math.max(0,Math.round(el.getBoundingClientRect().top+currentY-headerH-12));
+
+      animateDocumentScroll(targetY,()=>{
+        finishSectionNavigation(focusTarget,updateHash,el);
+      });
+    };
+
+    const hadKeyboard=dismissKeyboard();
+    if(hadKeyboard){
+      afterViewportSettles(perform);
+    }else{
+      perform();
+    }
+    return true;
+  }
+
+  // User gestures always override automated navigation immediately.
+  window.addEventListener('touchstart',cancelAutoScroll,{passive:true});
+  window.addEventListener('wheel',cancelAutoScroll,{passive:true});
+
+  function focusRouteResult(){
+    const box=$('#routeResult');
+    if(!box)return;
+    box.classList.remove('route-focus');
+    void box.offsetWidth;
+    box.classList.add('route-focus');
+    window.setTimeout(()=>box.classList.remove('route-focus'),1800);
+    scrollToSection(box,box,false);
+  }
+
+  function closeDrawer(){
+    $('#navDrawer').classList.remove('open');
+    $('#menuBtn').setAttribute('aria-expanded','false');
+  }
+
+  const root=document.documentElement;
+
+  function updateViewportState(){
+    const vv=window.visualViewport;
+    const visualHeight=vv?.height||window.innerHeight;
+    root.style.setProperty('--vvh',`${Math.round(visualHeight)}px`);
+
+    const active=document.activeElement;
+    const inputActive=editableElement(active);
+    const keyboardByViewport=!!(vv && (window.innerHeight-vv.height)>110);
+    const keyboardOpen=inputActive && (keyboardByViewport || visualHeight<window.innerHeight*.82);
+
+    root.classList.toggle('input-active',inputActive);
+    root.classList.toggle('keyboard-open',keyboardOpen);
+
+    if(keyboardOpen){
+      closeDrawer();
+      setDockVisible(false);
+    }
+  }
+
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',updateViewportState,{passive:true});
+    window.visualViewport.addEventListener('scroll',updateViewportState,{passive:true});
+  }
+  window.addEventListener('resize',()=>{updateViewportState();updateScrollIndicator()},{passive:true});
+  document.addEventListener('focusin',()=>{
+    requestAnimationFrame(updateViewportState);
+    setTimeout(updateViewportState,80);
+  });
+  document.addEventListener('focusout',()=>{
+    setTimeout(updateViewportState,140);
+  });
+
+  let humosUserScrollTimer=0;
+  let humosLastScrollY=Math.max(0,window.scrollY||window.pageYOffset||0);
+  let humosDockIntroduced=humosLastScrollY>=84;
+
+  function getVisibleSectionLabel(){
+    const sections=[
+      ['today','Today'],
+      ['plan','Plan'],
+      ['patterns','Patterns'],
+      ['progress','Progress'],
+      ['support','Support']
+    ];
+    const headerH=document.querySelector('.topbar')?.getBoundingClientRect().height||0;
+    let current='Today';
+    for(const [id,label] of sections){
+      const el=document.getElementById(id);
+      if(el && el.getBoundingClientRect().top<=headerH+90)current=label;
+    }
+    return current;
+  }
+
+  function updateScrollIndicator(){
+    const btn=$('#scrollTopBtn');
+    const pct=$('#scrollTopPercent');
+    const spy=$('#scrollSpyIndicator');
+    const spySection=$('#scrollSpySection');
+    const spyText=$('#scrollSpyText');
+    if(!btn||!pct)return;
+
+    const y=Math.max(0,window.scrollY||window.pageYOffset||0);
+    const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+    const progress=Math.max(0,Math.min(100,(y/max)*100));
+    const rounded=Math.round(progress);
+    const angle=(progress*3.6).toFixed(2)+'deg';
+    const section=getVisibleSectionLabel();
+
+    btn.style.setProperty('--scroll-angle',angle);
+    pct.textContent=rounded+'%';
+    btn.setAttribute('aria-label','Scroll to top — '+rounded+'% through page');
+
+    if(spySection)spySection.textContent=section.toUpperCase();
+    if(spyText)spyText.textContent=rounded+'%';
+  }
+
+  function markUserScrolling(){
+    const root=document.documentElement;
+    const btn=$('#scrollTopBtn');
+    const spy=$('#scrollSpyIndicator');
+    const y=Math.max(0,window.scrollY||window.pageYOffset||0);
+    const delta=y-humosLastScrollY;
+
+    root.classList.add('humos-user-scrolling');
+    btn?.classList.add('scrolling');
+    spy?.classList.add('show');
+    updateScrollIndicator();
+
+    if(!root.classList.contains('keyboard-open')){
+      if(y<72){
+        humosDockIntroduced=false;
+        setDockVisible(false);
+      }else if(!humosDockIntroduced && y>=84){
+        // First reveal: the controls appear only after the user has genuinely
+        // entered the content, never while resting at the top.
+        humosDockIntroduced=true;
+        setDockVisible(true);
+      }else if(delta<-4){
+        setDockVisible(true);
+      }else if(delta>5 && y>150){
+        setDockVisible(false);
+      }
+    }
+
+    humosLastScrollY=y;
+
+    clearTimeout(humosUserScrollTimer);
+    humosUserScrollTimer=window.setTimeout(()=>{
+      root.classList.remove('humos-user-scrolling');
+      btn?.classList.remove('scrolling');
+      spy?.classList.remove('show');
+      updateScrollIndicator();
+    },360);
+  }
+
+  window.addEventListener('scroll',markUserScrolling,{passive:true});
+
+  $('#scrollTopBtn').addEventListener('click',()=>{
+    dismissKeyboard();
+    animateDocumentScroll(0,()=>{
+      document.documentElement.classList.remove('humos-transition');
+      try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+    });
+  });
+
+  // Events
+  $('#menuBtn').addEventListener('click',()=>{
+    const o=$('#navDrawer').classList.toggle('open');
+    $('#menuBtn').setAttribute('aria-expanded',String(o));
+  });
+  $$('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+    const href=a.getAttribute('href');
+    const target=href&&document.querySelector(href);
+    if(!target)return;
+    e.preventDefault();
+    closeDrawer();
+    scrollToSection(target,null,true);
+  }));
+  document.addEventListener('click',e=>{
+    if(!$('#navDrawer').contains(e.target)&&!$('#menuBtn').contains(e.target))closeDrawer();
+  });
+
+  $('#runtimeForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const t=$('#runtimeInput').value.trim();
+    if(!t){
+      toast('Describe what is happening or choose a trigger');
+      $('#runtimeInput').focus();
+      return;
+    }
+    $('#momentText').value=t;
+    const inf=inferTrigger(t);
+    if(inf){
+      state.selectedTrigger=inf;
+      save();
+      selectTriggerButton(inf);
+    }
+    runRoute({focusResult:true,requireContext:true});
+  });
+
+  function selectTriggerButton(name){
+    $$('#triggerButtons button').forEach(b=>{
+      const selected=b.dataset.trigger===name;
+      b.classList.toggle('active',selected);
+      b.setAttribute('aria-pressed',String(selected));
+    });
+    $('#stateTrigger').textContent=name||'Unspecified';
+  }
+  const triggerPrompt={
+    Coffee:'Coffee is triggering the habit right now.',
+    Stress:'Stress is pushing me toward the habit right now.',
+    Boredom:'I am bored and reaching for the habit automatically.',
+    Social:'A social situation is triggering the old behavior.',
+    Night:'It is late and my usual night-time habit is starting.',
+    Phone:'My phone is triggering the behavior automatically.',
+    Impulse:'I feel a strong impulse to act before thinking.'
+  };
+  $$('#triggerButtons button').forEach(b=>b.addEventListener('click',()=>{
+    state.selectedTrigger=b.dataset.trigger;
+    save();
+    selectTriggerButton(state.selectedTrigger);
+    const prompt=triggerPrompt[state.selectedTrigger]||`${state.selectedTrigger} is triggering the habit right now.`;
+    $('#momentText').value=prompt;
+    $('#runtimeInput').value=prompt;
+    $('#stateExit').textContent='Open';
+    runRoute({focusResult:true,requireContext:false});
+  }));
+
+  $('#intensity').addEventListener('input',e=>{
+    const v=clamp(e.target.value,1,10);
+    $('#intensityValue').textContent=v+'/10';
+    $('#stateIntensity').textContent=v+' / 10';
+  });
+  $('#routeMomentBtn').addEventListener('click',e=>{
+    e.preventDefault();
+    runRoute({focusResult:true,requireContext:false});
+  });
+  $('#clearMomentBtn').addEventListener('click',()=>{
+    $('#momentText').value='';$('#runtimeInput').value='';state.selectedTrigger='';save();selectTriggerButton('');
+    $('#stateTrigger').textContent='Unspecified';$('#stateExit').textContent='Open';$('#routeTitle').textContent='Reduce the immediate load';$('#routeCode').textContent='GATE · READY';$('#routeTriggerBadge').textContent='Trigger · Unspecified';$('#routeText').textContent='Choose a trigger or describe the moment. HUM-OS will reduce the immediate load with one bounded next action.';toast('Moment cleared');
+  });
+  $('#logResolvedBtn').addEventListener('click',()=>logResolved({navigate:true}));
+  $('#dockLog').addEventListener('click',()=>{logResolved({navigate:true});setDockVisible(false)});
+
+  ['#startCalmFromRoute','#harbourCalmBtn'].forEach(id=>$(id).addEventListener('click',startCalm));
+  $('#dockCalm').addEventListener('click',()=>{startCalm();setDockVisible(false)});
+  $('#calmStartBtn').addEventListener('click',calmStart);
+  $('#calmPauseBtn').addEventListener('click',calmPause);
+  $('#calmResetBtn').addEventListener('click',calmReset);
+  $('#closeCalmModal').addEventListener('click',()=>{calmPause();closeModal('#calmModal')});
+
+  $('#quickAddBtn').addEventListener('click',()=>openHabitEditor(null));
+  $('#addHabitBtn').addEventListener('click',()=>openHabitEditor(null));
+  $('#editHabitBtn').addEventListener('click',()=>openHabitEditor(activeHabit()));
+  $('#editActiveBtn').addEventListener('click',()=>openHabitEditor(activeHabit()));
+  $('#closeHabitModal').addEventListener('click',()=>closeModal('#habitModal'));
+  $('#habitForm').addEventListener('submit',saveHabit);
+  $('#deleteHabitBtn').addEventListener('click',deleteHabit);
+
+  function setDockVisible(show){
+    const dock=$('#actionDock');
+    if(!dock)return;
+    dock.classList.toggle('collapsed',!show);
+  }
+
+
+  $('#dockRoute').addEventListener('click',()=>{
+    setDockVisible(false);
+    const hasContext=$('#momentText').value.trim()||$('#runtimeInput').value.trim()||state.selectedTrigger;
+    if(hasContext){
+      runRoute({focusResult:true,requireContext:false});
+    }else{
+      scrollToSection('#moment','#momentText',false);
+      toast('Choose a trigger or describe the moment');
+    }
+  });
+  $('#needSupportBtn').addEventListener('click',()=>scrollToSection('#support'));
+  $('#dockSignal').addEventListener('click',()=>{
+    $('#signalBtn').click();
+    setDockVisible(false);
+  });
+
+  $('#signalBtn').addEventListener('click',()=>{
+    const h=activeHabit(),trigger=state.selectedTrigger||'a difficult moment';
+    showInfo('Signal · human bridge',`<p><strong style="color:#ecd0a2">Suggested support message:</strong></p>
+      <p style="margin-top:10px;padding:12px;border:1px solid #2b485a;border-radius:7px;background:#071722">“I am working on <strong>${escapeHTML(h.name)}</strong> and ${escapeHTML(trigger)} is hitting hard right now. Can you stay with me for five minutes while I let the urge pass?”</p>
+      <p style="margin-top:12px">This prototype does not send messages automatically. Choose a person you trust and use your normal messaging app.</p>`);
+  });
+  $('#moveBtn').addEventListener('click',()=>showInfo('Move · context reset','<p>Change the physical context before arguing with the urge. Stand up, move to another room, take a short walk, or put the triggering object/device out of reach. The goal is to break the automatic sequence.</p>'));
+  $('#learnBtn').addEventListener('click',()=>showInfo('Learn · why triggers feel automatic','<p>Repeated behavior links context to expectation. Coffee, a work break, a bed, a phone notification or a route home can become a cue. HUM-OS treats the cue-behavior relationship as the system to change, rather than treating the person as the problem.</p>'));
+  $('#expertBtn').addEventListener('click',()=>showInfo('Expert · safety boundary','<p>Behavior tracking is not a replacement for medical care. Sudden cessation of some substances, medication changes, severe withdrawal, or acute mental/physical health risk can require professional guidance. In immediate danger, use appropriate emergency services first.</p>'));
+  $('#aiBtn').addEventListener('click',()=>{
+    const h=activeHabit(),d=derived(h);
+    const common=state.logs.filter(l=>l.habit===h.name).slice(0,10).map(l=>l.trigger).filter(Boolean);
+    const trigger=common[0]||state.selectedTrigger||'routine/context';
+    showInfo('AI Mirror · local prototype summary',`<p>You have kept the <strong style="color:#ecd0a2">${escapeHTML(h.name)}</strong> charter active for about <strong>${Math.floor(d.days)} days</strong>. Your current prototype evidence points to <strong>${escapeHTML(trigger)}</strong> as a meaningful trigger. The next useful product behavior is not more motivation: it is collecting enough event-level evidence to see which intervention reliably lowers intensity.</p><p style="margin-top:12px">This summary is generated locally from the demo state; it is not medical advice.</p>`);
+  });
+
+  $('#closeInfoModal').addEventListener('click',()=>closeModal('#infoModal'));
+  $('#infoDoneBtn').addEventListener('click',()=>closeModal('#infoModal'));
+  $$('.modalbackdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){if(m.id==='calmModal')calmPause();m.classList.remove('open')}}));
+
+  // Scrollspy
+  const navLinks=$$('.desktop-nav a');
+  const targets=navLinks.map(a=>$(a.getAttribute('href'))).filter(Boolean);
+  function scrollSpy(){
+    const y=window.scrollY+110;
+    let current=targets[0]?.id;
+    targets.forEach(s=>{if(s.offsetTop<=y)current=s.id});
+    navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current));
+  }
+  let scrollSpyQueued=false;
+  window.addEventListener('scroll',()=>{
+    if(scrollSpyQueued)return;
+    scrollSpyQueued=true;
+    requestAnimationFrame(()=>{
+      if(!document.documentElement.classList.contains('keyboard-open'))scrollSpy();
+      scrollSpyQueued=false;
+    });
+  },{passive:true});
+
+  $$('#triggerButtons button').forEach(b=>b.setAttribute('aria-pressed','false'));
+
+  function updateNetworkState(){
+    const pill=$('#networkPill');
+    if(!pill)return;
+    pill.textContent=navigator.onLine?'Ready':'Offline';
+  }
+  window.addEventListener('online',updateNetworkState);
+  window.addEventListener('offline',updateNetworkState);
+  window.addEventListener('error',e=>{
+    console.error('HUM-OS runtime error:',e.error||e.message);
+    toast('A runtime error was caught safely. Your local data remains available.');
+  });
+
+  // Init
+  $('#copyrightYear').textContent=String(new Date().getFullYear());
+  updateNetworkState();
+  updateViewportState();
+  setDockVisible((window.scrollY||window.pageYOffset||0)>=84);
+  updateScrollIndicator();
+  requestAnimationFrame(()=>requestAnimationFrame(updateScrollIndicator));
+  renderClock();
+  renderAll();
+  selectTriggerButton(state.selectedTrigger||'');
+  updateCalm();
+  scrollSpy();
+  setInterval(renderClock,1000);
+  setInterval(updateLive,1000);
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }, {once:true});
+}
+</script>
+</body>
+</html>
